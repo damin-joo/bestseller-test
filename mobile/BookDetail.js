@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useBookmark } from './BookmarkContext';
 import { CloseIcon, StarIcon, ShareIcon, ExternalLinkIcon } from './components/IconButton';
+import apiConfig from './config/api';
 
 // 국가별 설정
 const COUNTRY_CONFIG = {
@@ -74,8 +75,11 @@ export default function BookDetail({ route, navigation }) {
       
       // link가 있으면 추가로 API 호출하여 더 자세한 정보 가져오기 (선택적)
       if (book.link) {
+        const countryKey = country.toLowerCase();
+        const detailUrl = apiConfig.endpoints[`${countryKey}BookDetail`] || 
+          `${apiConfig.baseURL}/${config.apiEndpoint}`;
         fetch(
-          `http://10.0.2.2:4000/${config.apiEndpoint}?url=${encodeURIComponent(
+          `${detailUrl}?url=${encodeURIComponent(
             book.link,
           )}`,
         )
@@ -108,8 +112,11 @@ export default function BookDetail({ route, navigation }) {
       // 캐시 데이터가 없고 link만 있는 경우 API 호출
       console.log('📘 요청 URL:', book.link);
 
+      const countryKey = country.toLowerCase();
+      const detailUrl = apiConfig.endpoints[`${countryKey}BookDetail`] || 
+        `${apiConfig.baseURL}/${config.apiEndpoint}`;
       fetch(
-        `http://10.0.2.2:4000/${config.apiEndpoint}?url=${encodeURIComponent(
+        `${detailUrl}?url=${encodeURIComponent(
           book.link,
         )}`,
       )

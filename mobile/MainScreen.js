@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BookmarkScreen from './Bookmark';
 import SettingsPage from './SettingsPage';
 import { useBookmark } from './BookmarkContext';
+import apiConfig from './config/api';
 
 export default function MainScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState('home');
@@ -30,17 +31,17 @@ export default function MainScreen({ navigation }) {
       try {
         let url = '';
         if (activeCountryTab === 'KOR') {
-          url = 'http://10.0.2.2:4000/kr-books';
+          url = apiConfig.endpoints.krBooks;
         } else if (activeCountryTab === 'JPN') {
-          url = 'http://10.0.2.2:4000/jp-books';
+          url = apiConfig.endpoints.jpBooks;
         } else if (activeCountryTab === 'USA') {
-          url = 'http://10.0.2.2:4000/us-books';
+          url = apiConfig.endpoints.usBooks;
         } else if (activeCountryTab === 'TWN') {
-          url = 'http://10.0.2.2:4000/tw-books';
+          url = apiConfig.endpoints.twBooks;
         } else if (activeCountryTab === 'FRA') {
-          url = 'http://10.0.2.2:4000/fr-books';
+          url = apiConfig.endpoints.frBooks;
         } else if (activeCountryTab === 'UK') {
-          url = 'http://10.0.2.2:4000/uk-books';
+          url = apiConfig.endpoints.ukBooks;
         }
         
         const res = await fetch(url);
