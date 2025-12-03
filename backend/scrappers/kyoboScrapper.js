@@ -20,13 +20,13 @@ async function fetchPageBooks(browser) {
       const titleEl = li.querySelector('a.prod_link.line-clamp-2.font-medium.text-black');
       const title = titleEl?.innerText.trim() || '';
       const detailHref = titleEl?.href || '';
-      const coverImage = li.querySelector('a.prod_link.relative img')?.src || '';
+      const image = li.querySelector('a.prod_link.relative img')?.src || '';
       const authorText = li.querySelector('div.line-clamp-2.flex')?.innerText || '';
       const author = authorText.split('·')[0]?.trim() || '';
       const publisher = authorText.split('·')[1]?.trim() || '';
 
-      if (title && author && publisher && coverImage && detailHref) {
-        books.push({ title, author, publisher, coverImage });
+      if (title && author && publisher && image && detailHref) {
+        books.push({ title, author, publisher, image });
         links.push(detailHref);
       }
     });
@@ -43,10 +43,10 @@ async function fetchBookDetail(browser, link) {
   await detailPage.goto(link, { waitUntil: 'networkidle2' });
 
   const data = await detailPage.evaluate(() => {
-    const contents = document.querySelector('#scrollSpyProdInfo div.product_detail_area.book_intro div.intro_bottom > div:last-child')?.innerText.trim() || '';
-    const outline = document.querySelector('#scrollSpyProdInfo div.product_detail_area.book_contents div.auto_overflow_wrap div.auto_overflow_contents ul li')?.innerText.trim() || '';
+    const description = document.querySelector('#scrollSpyProdInfo div.product_detail_area.book_intro div.intro_bottom > div:last-child')?.innerText.trim() || '';
+    const other = document.querySelector('#scrollSpyProdInfo div.product_detail_area.book_contents div.auto_overflow_wrap div.auto_overflow_contents ul li')?.innerText.trim() || '';
     const writerInfo = document.querySelector('#scrollSpyProdInfo div.product_detail_area.product_person div.writer_info_box p')?.innerText.trim() || '';
-    return { contents, outline, writerInfo };
+    return { description, other, writerInfo };
   });
 
   await detailPage.close();
@@ -72,16 +72,25 @@ export default async function kyoboScrapper() {
     );
 
     results.forEach((res, idx) => {
-      const data = res.status === 'fulfilled' ? res.value : { contents: '', outline: '', writerInfo: '' }; 
-      batchBooks[idx].contents = data.contents;
-      batchBooks[idx].outline = data.outline;
+      const data = res.status === 'fulfilled' ? res.value : { description: '', other: '', writerInfo: '' }; 
+      batchBooks[idx].description = data.description;
+      batchBooks[idx].other = data.other;
       batchBooks[idx].writerInfo = data.writerInfo;
       console.log(`${i + idx + 1}. ${batchBooks[idx].title} ✅`);
     });
   }
 
-  const resultPath = path.join(process.cwd(), '../json_results/kyobo.json');
-  fs.writeFileSync(resultPath, JSON.stringify(books, null, 2), 'utf-8');
+  const toPublicBook = book => ({
+    image: book.image || '',
+    title: book.title || '',
+    author: book.author || '',
+    writerInfo: book.writerInfo || '',
+    description: book.description || '',
+    other: book.other || '',
+  });
+
+  const resultPath = path.join(process.cwd(), '../json_results/korea.json');
+  fs.writeFileSync(resultPath, JSON.stringify(books.map(toPublicBook), null, 2), 'utf-8');
 
   console.log(`✅ Crawled ${books.length} books`);
   console.log(`Saved to ${resultPath}`);

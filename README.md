@@ -156,6 +156,7 @@ node taiwanScrapper.js    # 대만크롤링 결과는 `backend/json_results/`에
 - 캐시가 없을 경우에만 실시간 크롤링을 수행합니다
 - 모바일 앱은 Android 에뮬레이터에서 `10.0.2.2:4000`으로 서버에 접속합니다
 - 북마크 데이터는 AsyncStorage에 로컬로 저장됩니다
+- 구글 클라우드/API 사용시 credentials.json 추가 필요
 
 ---
 

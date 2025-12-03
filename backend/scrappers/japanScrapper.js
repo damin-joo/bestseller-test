@@ -187,7 +187,7 @@ async function fetchBookDetail(browser, link) {
 
       return {
         description,
-        plot,
+        other: plot,
         writerInfo,
       };
     });
@@ -197,7 +197,7 @@ async function fetchBookDetail(browser, link) {
   } catch (err) {
     await detailPage.close();
     console.error(`⚠️ 상세 정보 크롤링 실패 (${link}):`, err.message);
-    return { description: '', plot: '', writerInfo: '' };
+    return { description: '', other: '', writerInfo: '' };
   }
 }
 
@@ -224,24 +224,33 @@ export default async function jpScrapper() {
       const data =
         res.status === 'fulfilled'
           ? res.value
-          : { description: '', plot: '', writerInfo: '' };
-      batchBooks[idx].link = batchLinks[idx];
+          : { description: '', other: '', writerInfo: '' };
       batchBooks[idx].description = data.description || '';
-      batchBooks[idx].contents = data.description || '';
-      batchBooks[idx].plot = data.plot || '';
-      batchBooks[idx].outline = data.plot || '';
+      batchBooks[idx].other = data.other || '';
       batchBooks[idx].writerInfo = data.writerInfo || '';
-      batchBooks[idx].authorInfo = data.writerInfo || '';
       console.log(`${i + idx + 1}. ${batchBooks[idx].title} ✅`);
     });
   }
 
-  const resultPath = path.join(process.cwd(), '../json_results/jpbooks.json');
-  fs.writeFileSync(resultPath, JSON.stringify(books, null, 2), 'utf-8');
+  const resultPath = path.join(process.cwd(), '../json_results/japan.json');
+  const sanitized = books.map(toPublicBook);
+  fs.writeFileSync(resultPath, JSON.stringify(sanitized, null, 2), 'utf-8');
 
-  console.log(`✅ Crawled ${books.length} books and saved to jpbooks.json`);
+  console.log(`✅ Crawled ${books.length} books and saved to japan.json`);
   console.log(`⏱ Done in ${(Date.now() - startTime) / 1000}s`);
   await browser.close();
+}
+
+function toPublicBook(raw) {
+  const trim = value => (value || '').trim();
+  return {
+    image: trim(raw.image),
+    title: trim(raw.title),
+    author: trim(raw.author),
+    writerInfo: trim(raw.writerInfo),
+    description: trim(raw.description),
+    other: trim(raw.other),
+  };
 }
 
 // Run directly
