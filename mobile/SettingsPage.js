@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLanguage } from './LanguageContext';
+import MyAds from './BannerAd';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 export const LANGUAGE_OPTIONS = [
   { label: '한국어', value: 0 },
@@ -206,6 +208,10 @@ export default function SettingsPage({ navigation }) {
             <Text style={styles.linkText}>Link</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.adContainer}>
+          <MyAds type="adaptive" size={BannerAdSize.MEDIUM_RECTANGLE} />
+        </View>
       </ScrollView>
     </View>
   );
@@ -234,6 +240,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
     flex: 1,
+  },
+  adContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
   },
   scrollView: {
     flex: 1,

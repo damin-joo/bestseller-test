@@ -417,10 +417,6 @@ export default function BookDetail({ route, navigation }) {
             onPress={() => setWikiModalVisible(false)} 
             activeOpacity={1}
           />
-          
-          <View style={styles.adContainer}>
-            <MyAds type="adaptive" size={BannerAdSize.LARGE_BANNER} />
-          </View>
 
           <View style={styles.modalContent}>
             <TouchableOpacity 
@@ -438,6 +434,10 @@ export default function BookDetail({ route, navigation }) {
               scalesPageToFit={true}
               mixedContentMode="always"
             />
+          </View>
+
+          <View style={styles.adContainer}>
+            <MyAds type="adaptive" size={BannerAdSize.BANNER} />
           </View>
         </View>
       </Modal>
@@ -671,8 +671,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalContent: {
-    height: '80%',
+    height: '90%',
     width: '100%',
+    top: 0,
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
