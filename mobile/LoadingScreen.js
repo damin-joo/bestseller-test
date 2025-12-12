@@ -68,9 +68,9 @@ export default function LoadingScreen() {
           <Animated.View style={[styles.dot, { opacity: dot2Opacity }]} />
           <Animated.View style={[styles.dot, { opacity: dot3Opacity }]} />
         </View>
-        {/* <View style={styles.adContainer}>
+        <View style={styles.adContainer}>
             <MyAds type="native" size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View> */}
+        </View>
       </View>
     </View>
   );

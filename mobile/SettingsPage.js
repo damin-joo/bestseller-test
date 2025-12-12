@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-  Switch,
   StyleSheet,
   Linking,
-  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLanguage } from './LanguageContext';
+import { useTheme } from './ThemeContext';
 import MyAds from './BannerAd';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
+import { APP_VERSION } from './config/version';
 
 export const LANGUAGE_OPTIONS = [
   { label: '한국어', value: 0 },
@@ -21,14 +22,21 @@ export const LANGUAGE_OPTIONS = [
   { label: '中国人', value: 3 },
   { label: '台灣', value: 4 },
   { label: 'Français', value: 5 },
+  { label: 'Español', value: 6 },
 ];
 
 export default function SettingsPage({ navigation }) {
-  const [haptics, setHaptics] = useState(true);
-  const [notification, setNotification] = useState(true);
   const { language, setLanguage, userLanguage, setUserLanguage } = useLanguage();
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-  const [theme, setTheme] = useState('Light'); // 'Dark' or 'Light'
+  const { theme, updateTheme, isDark, colors } = useTheme();
+
+  // 화면이 포커스될 때마다 테마 다시 불러오기
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // 테마는 ThemeContext에서 자동으로 불러옴
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const handleLinkPress = async (url) => {
     try {
@@ -51,96 +59,168 @@ export default function SettingsPage({ navigation }) {
     }
   };
 
+  const dynamicStyles = useMemo(() => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.primaryBackground,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 50,
+      paddingBottom: 20,
+      paddingHorizontal: 20,
+      backgroundColor: colors.primaryBackground,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    headerTitle: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: colors.text,
+      flex: 1,
+    },
+    settingItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    selectedItem: {
+      backgroundColor: colors.secondaryBackground,
+    },
+    settingLabel: {
+      fontSize: 16,
+      color: colors.text,
+    },
+    selectedLabel: {
+      fontWeight: '600',
+    },
+    languageValue: {
+      fontSize: 16,
+      color: colors.text,
+    },
+    themeContainer: {
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#1e293b' : '#F5F5F5',
+      borderRadius: 8,
+      padding: 4,
+      gap: 4,
+    },
+    themeOption: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: isDark ? '#334155' : '#E0E0E0',
+    },
+    themeOptionActive: {
+      backgroundColor: isDark ? '#1a1f2e' : '#9d4edd',
+      borderColor: isDark ? '#1a1f2e' : '#9d4edd',
+    },
+    themeOptionText: {
+      fontSize: 14,
+      color: isDark ? (theme === 'Dark' ? '#60a5fa' : '#94a3b8') : (theme === 'Dark' ? '#fff' : '#000'),
+      fontWeight: '500',
+    },
+    themeOptionTextActive: {
+      color: isDark ? '#60a5fa' : '#fff',
+      fontWeight: '600',
+    },
+    linkText: {
+      fontSize: 16,
+      color: colors.link,
+      fontWeight: '600',
+    },
+    languageList: {
+      backgroundColor: colors.secondaryBackground,
+    },
+    languageOptionItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    selectedLanguageOption: {
+      backgroundColor: isDark ? '#1e293b' : '#E8F0FE',
+    },
+    languageOptionText: {
+      fontSize: 15,
+      color: colors.secondaryText,
+    },
+    selectedLanguageText: {
+      color: colors.link,
+      fontWeight: '600',
+    },
+    versionText: {
+      fontSize: 16,
+      color: colors.secondaryText,
+      fontWeight: '500',
+    },
+  }), [colors, isDark]);
+
   return (
-    <View style={styles.container}>
+    <View style={dynamicStyles.container}>
       {/* 헤더 */}
-      <View style={styles.header}>
-        <Icon name="cog" size={24} color="#000" style={styles.headerIcon} />
-        <Text style={styles.headerTitle}>Settings</Text>
+      <View style={dynamicStyles.header}>
+        <Icon name="cog" size={24} color={colors.text} style={styles.headerIcon} />
+        <Text style={dynamicStyles.headerTitle}>Settings</Text>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* User Data */}
-        <TouchableOpacity
-          style={styles.settingItem}
-          onPress={() => navigation.navigate('UserData')}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.settingLabel}>User Data</Text>
-          <Icon name="chevron-right" size={24} color="#666" />
-        </TouchableOpacity>
-
-        {/* Sound */}
-        <TouchableOpacity
-          style={[styles.settingItem, styles.selectedItem]}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.settingLabel, styles.selectedLabel]}>Sound</Text>
-        </TouchableOpacity>
-
-        {/* Haptics */}
-        <View style={styles.settingItem}>
-          <Text style={styles.settingLabel}>Haptics</Text>
-          <Switch
-            value={haptics}
-            onValueChange={setHaptics}
-            trackColor={{ false: '#767577', true: '#9d4edd' }}
-            thumbColor={haptics ? '#fff' : '#f4f3f4'}
-            ios_backgroundColor="#767577"
-          />
-        </View>
-
-        {/* Notification */}
-        <View style={styles.settingItem}>
-          <Text style={styles.settingLabel}>Notification</Text>
-          <Switch
-            value={notification}
-            onValueChange={setNotification}
-            trackColor={{ false: '#767577', true: '#9d4edd' }}
-            thumbColor={notification ? '#fff' : '#f4f3f4'}
-            ios_backgroundColor="#767577"
-          />
-        </View>
-
+      <ScrollView style={[styles.scrollView, { backgroundColor: colors.primaryBackground }]} contentContainerStyle={styles.scrollContent}>
         {/* Language */}
         <View>
           <TouchableOpacity
-            style={styles.settingItem}
+            style={dynamicStyles.settingItem}
             activeOpacity={0.7}
             onPress={() => setIsLanguageOpen(!isLanguageOpen)}
           >
-            <Text style={styles.settingLabel}>Language</Text>
+            <Text style={dynamicStyles.settingLabel}>Language</Text>
             <View style={styles.languageContainer}>
-              <Text style={styles.languageValue}>
+              <Text style={dynamicStyles.languageValue}>
                 {LANGUAGE_OPTIONS.find(opt => opt.value === userLanguage)?.label || '한국어'}
               </Text>
-              <Icon name={isLanguageOpen ? "chevron-up" : "chevron-down"} size={20} color="#666" />
+              <Icon name={isLanguageOpen ? "chevron-up" : "chevron-down"} size={20} color={colors.secondaryText} />
             </View>
           </TouchableOpacity>
 
           {isLanguageOpen && (
-            <View style={styles.languageList}>
+            <View style={dynamicStyles.languageList}>
               {LANGUAGE_OPTIONS.map((option) => (
                 <TouchableOpacity
                   key={option.label}
                   style={[
-                    styles.languageOptionItem,
-                    language === option.value && styles.selectedLanguageOption
+                    dynamicStyles.languageOptionItem,
+                    language === option.value && dynamicStyles.selectedLanguageOption
                   ]}
-                  onPress={() => {
+                  onPress={async () => {
                     setUserLanguage(option.value);
                     setLanguage(option.value + 1);
                     setIsLanguageOpen(false);
+                    // MainScreen에서 사용할 언어 이름 저장
+                    const languageNames = ['Korean', 'English', 'Japanese', 'Chinese', 'Traditional Chinese', 'French', 'Spanish'];
+                    const languageName = languageNames[option.value] || 'English';
+                    try {
+                      await AsyncStorage.setItem('appLanguage', languageName);
+                    } catch (error) {
+                      console.error('언어 설정 저장 실패:', error);
+                    }
                   }}
                 >
                   <Text style={[
-                    styles.languageOptionText,
-                    userLanguage === option.value && styles.selectedLanguageText
+                    dynamicStyles.languageOptionText,
+                    userLanguage === option.value && dynamicStyles.selectedLanguageText
                   ]}>
                     {option.label}
                   </Text>
                   {userLanguage === option.value && (
-                    <Icon name="check" size={20} color="#4285F4" />
+                    <Icon name="check" size={20} color={colors.link} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -149,20 +229,20 @@ export default function SettingsPage({ navigation }) {
         </View>
 
         {/* Theme */}
-        <View style={styles.settingItem}>
-          <Text style={styles.settingLabel}>Theme</Text>
-          <View style={styles.themeContainer}>
+        <View style={dynamicStyles.settingItem}>
+          <Text style={dynamicStyles.settingLabel}>Theme</Text>
+          <View style={dynamicStyles.themeContainer}>
             <TouchableOpacity
               style={[
-                styles.themeOption,
-                theme === 'Dark' && styles.themeOptionActive,
+                dynamicStyles.themeOption,
+                theme === 'Dark' && dynamicStyles.themeOptionActive,
               ]}
-              onPress={() => setTheme('Dark')}
+              onPress={() => updateTheme('Dark')}
             >
               <Text
                 style={[
-                  styles.themeOptionText,
-                  theme === 'Dark' && styles.themeOptionTextActive,
+                  dynamicStyles.themeOptionText,
+                  theme === 'Dark' && dynamicStyles.themeOptionTextActive,
                 ]}
               >
                 Dark
@@ -170,15 +250,15 @@ export default function SettingsPage({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[
-                styles.themeOption,
-                theme === 'Light' && styles.themeOptionActive,
+                dynamicStyles.themeOption,
+                theme === 'Light' && dynamicStyles.themeOptionActive,
               ]}
-              onPress={() => setTheme('Light')}
+              onPress={() => updateTheme('Light')}
             >
               <Text
                 style={[
-                  styles.themeOptionText,
-                  theme === 'Light' && styles.themeOptionTextActive,
+                  dynamicStyles.themeOptionText,
+                  theme === 'Light' && dynamicStyles.themeOptionTextActive,
                 ]}
               >
                 Light
@@ -188,25 +268,63 @@ export default function SettingsPage({ navigation }) {
         </View>
 
         {/* Instagram */}
-        <View style={styles.settingItem}>
-          <Text style={styles.settingLabel}>Instagram</Text>
+        <View style={dynamicStyles.settingItem}>
+          <Text style={dynamicStyles.settingLabel}>Instagram</Text>
           <TouchableOpacity
             style={styles.linkButton}
             onPress={() => handleLinkPress('https://www.instagram.com/sunnyinnolab/')}
           >
-            <Text style={styles.linkText}>Link</Text>
+            <Text style={dynamicStyles.linkText}>Link</Text>
           </TouchableOpacity>
         </View>
 
         {/* X (Twitter) */}
-        <View style={styles.settingItem}>
-          <Text style={styles.settingLabel}>X (Twitter)</Text>
+        <View style={dynamicStyles.settingItem}>
+          <Text style={dynamicStyles.settingLabel}>X (Twitter)</Text>
           <TouchableOpacity
             style={styles.linkButton}
             onPress={() => handleLinkPress('https://x.com/Sunnyinnolab')}
           >
-            <Text style={styles.linkText}>Link</Text>
+            <Text style={dynamicStyles.linkText}>Link</Text>
           </TouchableOpacity>
+        </View>
+
+        {/* Sunny's Games and Apps */}
+        <TouchableOpacity
+          style={dynamicStyles.settingItem}
+          activeOpacity={0.7}
+          onPress={() => {
+            // TODO: 나중에 내용 추가
+          }}
+        >
+          <Text style={dynamicStyles.settingLabel}>Sunny's Games and Apps</Text>
+          <Icon name="chevron-right" size={24} color={colors.secondaryText} />
+        </TouchableOpacity>
+
+        {/* Credits */}
+        <TouchableOpacity
+          style={dynamicStyles.settingItem}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('Credits')}
+        >
+          <Text style={dynamicStyles.settingLabel}>Credits</Text>
+          <Icon name="chevron-right" size={24} color={colors.secondaryText} />
+        </TouchableOpacity>
+
+        {/* Open Source Info */}
+        <TouchableOpacity
+          style={dynamicStyles.settingItem}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('OpenSourceInfo')}
+        >
+          <Text style={dynamicStyles.settingLabel}>Open Source Info</Text>
+          <Icon name="chevron-right" size={24} color={colors.secondaryText} />
+        </TouchableOpacity>
+
+        {/* App Version */}
+        <View style={dynamicStyles.settingItem}>
+          <Text style={dynamicStyles.settingLabel}>App Version</Text>
+          <Text style={dynamicStyles.versionText}>v {APP_VERSION}</Text>
         </View>
 
         <View style={styles.adContainer}>
@@ -218,28 +336,8 @@ export default function SettingsPage({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 50,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
   headerIcon: {
     marginRight: 12,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#000',
-    flex: 1,
   },
   adContainer: {
     alignItems: 'center',
@@ -253,91 +351,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  selectedItem: {
-    backgroundColor: '#F5F5F5',
-  },
-  settingLabel: {
-    fontSize: 16,
-    color: '#000',
-  },
-  selectedLabel: {
-    fontWeight: '600',
-  },
   languageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  languageValue: {
-    fontSize: 16,
-    color: '#000',
-  },
-  themeContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    padding: 4,
-    gap: 4,
-  },
-  themeOption: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  themeOptionActive: {
-    backgroundColor: '#9d4edd',
-    borderColor: '#9d4edd',
-  },
-  themeOptionText: {
-    fontSize: 14,
-    color: '#000',
-    fontWeight: '500',
-  },
-  themeOptionTextActive: {
-    color: '#fff',
-    fontWeight: '600',
-  },
   linkButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-  },
-  linkText: {
-    fontSize: 16,
-    color: '#9d4edd',
-    fontWeight: '600',
-  },
-  languageList: {
-    backgroundColor: '#F5F5F5',
-  },
-  languageOptionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  selectedLanguageOption: {
-    backgroundColor: '#E8F0FE',
-  },
-  languageOptionText: {
-    fontSize: 15,
-    color: '#333',
-  },
-  selectedLanguageText: {
-    color: '#4285F4',
-    fontWeight: '600',
   },
 });

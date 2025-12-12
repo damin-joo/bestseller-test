@@ -5,10 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BookDetail from './BookDetail';
 import { BookmarkProvider } from './BookmarkContext';
 import { LanguageProvider } from './LanguageContext';
+import { ThemeProvider } from './ThemeContext';
 import SplashPage from './SplashPage';
 import MainScreen from './MainScreen';
 import SettingsPage from './SettingsPage';
 import UserDataPage from './UserDataPage';
+import CreditsPage from './CreditsPage';
+import OpenSourceInfoPage from './OpenSourceInfoPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,24 +58,29 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <BookmarkProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Splash" component={SplashPage} />
-            <Stack.Screen name="Main" component={MainScreen} />
-            <Stack.Screen name="KrDetail" component={BookDetail} />
-            <Stack.Screen name="UsDetail" component={BookDetail} />
-            <Stack.Screen name="JpDetail" component={BookDetail} />
-            <Stack.Screen name="TwDetail" component={BookDetail} />
-            <Stack.Screen name="FrDetail" component={BookDetail} />
-            <Stack.Screen name="UkDetail" component={BookDetail} />
-            <Stack.Screen name="Settings" component={SettingsPage} />
-            <Stack.Screen name="UserData" component={UserDataPage} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </BookmarkProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <BookmarkProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Splash" component={SplashPage} />
+              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen name="KrDetail" component={BookDetail} />
+              <Stack.Screen name="UsDetail" component={BookDetail} />
+              <Stack.Screen name="JpDetail" component={BookDetail} />
+              <Stack.Screen name="TwDetail" component={BookDetail} />
+              <Stack.Screen name="FrDetail" component={BookDetail} />
+              <Stack.Screen name="UkDetail" component={BookDetail} />
+              <Stack.Screen name="EsDetail" component={BookDetail} />
+              <Stack.Screen name="Settings" component={SettingsPage} />
+              <Stack.Screen name="UserData" component={UserDataPage} />
+              <Stack.Screen name="Credits" component={CreditsPage} />
+              <Stack.Screen name="OpenSourceInfo" component={OpenSourceInfoPage} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </BookmarkProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
