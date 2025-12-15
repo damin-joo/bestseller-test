@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,8 +17,14 @@ import LoadingScreen from './LoadingScreen';
 import { useBookmark } from './BookmarkContext';
 import { useLanguage } from './LanguageContext';
 import { useTheme } from './ThemeContext';
-import { BannerAdSize } from 'react-native-google-mobile-ads';
+import { BannerAdSize, InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
 import MyAds from './BannerAd';
+
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3940256099942544/1033173712';
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+  requestNonPersonalizedAdsOnly: true,
+});
 
 // 번역 데이터 (Google Sheets 기반)
 // 참조: https://docs.google.com/spreadsheets/d/1GoeMU5HbM7g2jujoO5vBI6Z1BH_EjUtnVmV9zWAKpHs/edit?gid=0#gid=0
@@ -167,6 +173,26 @@ const COUNTRY_INDEX_TO_LABEL_COLUMN = {
 
 export default function MainScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState('home');
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeLoaded = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      setLoaded(true);
+    });
+
+    const unsubscribeClosed = interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+      setLoaded(false);
+      interstitial.load();
+    });
+
+    interstitial.load();
+
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeClosed();
+    };
+  }, []);
+
   const { isBookmarked, toggleBookmark } = useBookmark();
   const {
     country,
@@ -390,7 +416,12 @@ export default function MainScreen({ navigation }) {
                 styles.languageOption,
                 language === (userLanguage + 1) && styles.languageOptionActive
               ]}
-              onPress={() => setLanguage(userLanguage + 1)}
+              onPress={() => {
+                setLanguage(userLanguage + 1);
+                if (loaded) {
+                  interstitial.show();
+                }
+              }}
             >
               <Text style={[
                 styles.languageText,
@@ -404,7 +435,12 @@ export default function MainScreen({ navigation }) {
                 styles.languageOption,
                 language === 0 && styles.languageOptionActive
               ]}
-              onPress={() => setLanguage(0)}
+              onPress={() => {
+                setLanguage(0);
+                if (loaded) {
+                  interstitial.show();
+                }
+              }}
             >
               <Text style={[
                 styles.languageText,
