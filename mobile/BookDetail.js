@@ -53,42 +53,49 @@ const translations = {
     author: '저자',
     aboutBook: '도서 정보',
     moreInfo: '상세 정보',
+    noInfo: '정보 없음',
   },
   english: {
     viewOnStore: 'View on Store',
     author: 'Author',
     aboutBook: 'About Book',
     moreInfo: 'More Info',
+    noInfo: 'No information',
   },
   japanese: {
     viewOnStore: 'ストアで見る',
     author: '著者',
     aboutBook: '書籍情報',
     moreInfo: '詳細情報',
+    noInfo: '情報なし',
   },
   chinese: {
     viewOnStore: '前往商店',
     author: '作者',
     aboutBook: '图书信息',
     moreInfo: '细节',
+    noInfo: '无相关信息',
   },
   traditionalChinese: {
     viewOnStore: '查看店鋪',
     author: '作者',
     aboutBook: '關於本書',
     moreInfo: '更多資訊',
+    noInfo: '無相關資訊',
   },
   french: {
     viewOnStore: 'Voir en magasin',
     author: 'auteur',
     aboutBook: 'Informations sur le livre',
     moreInfo: "Plus d'informations",
+    noInfo: 'Aucune information',
   },
   spanish: {
     viewOnStore: 'Ver en la tienda',
     author: 'Autor',
     aboutBook: 'Sobre el libro',
     moreInfo: 'Más información',
+    noInfo: 'Sin información',
   },
 };
 
@@ -287,7 +294,8 @@ export default function BookDetail({ route, navigation }) {
       book.plot ||
       book.authorInfo_kr ||
       book.description_kr ||
-      book.moreInfo_kr
+      book.moreInfo_kr ||
+      book.other
     ) {
       setDetails({
         authorInfo: book.authorInfo || '',
@@ -299,6 +307,7 @@ export default function BookDetail({ route, navigation }) {
         authorInfo_kr: book.authorInfo_kr || '',
         description_kr: book.description_kr || '',
         moreInfo_kr: book.moreInfo_kr || '',
+        other: book.other || '',
       });
     }
     setLoading(false);
@@ -312,6 +321,7 @@ export default function BookDetail({ route, navigation }) {
     book?.authorInfo_kr,
     book?.description_kr,
     book?.moreInfo_kr,
+    book?.other,
   ]);
 
   // 번역 가져오기
@@ -414,13 +424,14 @@ export default function BookDetail({ route, navigation }) {
               {getTabTitle('moreInfo')}
             </Text>
             <Text style={styles.tabContentText}>
-              {language === 'korean' && details?.moreInfo_kr
+              {details?.other
+                ? details.other
+                : language === 'korean' && details?.moreInfo_kr
                 ? details.moreInfo_kr
                 : details?.publisherReview ||
                   details?.review ||
                   details?.contents ||
-                  details?.description ||
-                  'Publisher review information is not available.'}
+                  getTranslation('noInfo')}
             </Text>
             <View
               style={[styles.adContainer, { marginTop: 20, marginBottom: 20 }]}
@@ -947,7 +958,7 @@ const getStyles = (colors, isDark) =>
     },
     modalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: colors.primaryBackground,
       justifyContent: 'flex-end',
     },
     modalContainer: {
