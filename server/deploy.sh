@@ -54,3 +54,4 @@ echo ""
 echo "📝 모바일 앱의 mobile/config/api.js에서 프로덕션 URL을 업데이트하세요:"
 echo "   $SERVICE_URL"
 
+
