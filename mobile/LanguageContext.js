@@ -67,6 +67,7 @@ export const LanguageProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dataCache = React.useRef({});
+  const preloadStarted = React.useRef(false);
   
   // 로컬 캐시 TTL: 24시간 (데이터가 일주일마다 업데이트되므로 24시간 캐싱이 적절)
   const CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간
@@ -123,17 +124,21 @@ export const LanguageProvider = ({ children }) => {
   }, []);
 
   // 2. Fetch Data (When country/sheetUrl changes)
-  const fetchSheets = useCallback(async () => {
+  const fetchSheets = useCallback(async (forceUrl = null) => {
+    const targetUrl = forceUrl || sheetUrl;
+    
     // 1. 메모리 캐시 확인 (가장 빠름)
-    if (dataCache.current[sheetUrl]) {
-      setData(dataCache.current[sheetUrl]);
-      setLoading(false);
+    if (dataCache.current[targetUrl]) {
+      if (!forceUrl) { // 현재 선택된 국가만 UI 업데이트
+        setData(dataCache.current[targetUrl]);
+        setLoading(false);
+      }
       return;
     }
 
     // 2. 로컬 스토리지 캐시 확인
     try {
-      const cacheKey = `sheet_data_${sheetUrl}`;
+      const cacheKey = `sheet_data_${targetUrl}`;
       const cachedData = await AsyncStorage.getItem(cacheKey);
       
       if (cachedData) {
@@ -143,9 +148,11 @@ export const LanguageProvider = ({ children }) => {
         // 캐시가 유효한 경우 (24시간 이내)
         if (now - timestamp < CACHE_TTL) {
           console.log('[LanguageContext] Using cached data from AsyncStorage');
-          dataCache.current[sheetUrl] = cachedRows; // 메모리 캐시에도 저장
-          setData(cachedRows);
-          setLoading(false);
+          dataCache.current[targetUrl] = cachedRows; // 메모리 캐시에도 저장
+          if (!forceUrl) { // 현재 선택된 국가만 UI 업데이트
+            setData(cachedRows);
+            setLoading(false);
+          }
           return;
         } else {
           console.log('[LanguageContext] Cache expired (24h), fetching new data');
@@ -156,39 +163,123 @@ export const LanguageProvider = ({ children }) => {
     }
 
     // 3. 네트워크에서 데이터 가져오기
-    setLoading(true);
-    setError(null);
+    if (!forceUrl) {
+      setLoading(true);
+      setError(null);
+    }
     try {
-      const rows = await fetchSheet(sheetUrl);
+      const rows = await fetchSheet(targetUrl);
       
       // 메모리 캐시에 저장
-      dataCache.current[sheetUrl] = rows;
+      dataCache.current[targetUrl] = rows;
       
       // 로컬 스토리지에 저장
       try {
-        const cacheKey = `sheet_data_${sheetUrl}`;
+        const cacheKey = `sheet_data_${targetUrl}`;
         const cacheData = {
           data: rows,
           timestamp: Date.now(),
         };
         await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheData));
-        console.log('[LanguageContext] Data cached to AsyncStorage');
+        console.log(`[LanguageContext] Data cached to AsyncStorage${forceUrl ? ' (background)' : ''}`);
       } catch (storageError) {
         console.warn('[LanguageContext] Cache write error:', storageError);
       }
       
-      setData(rows);
+      if (!forceUrl) { // 현재 선택된 국가만 UI 업데이트
+        setData(rows);
+      }
     } catch (err) {
       console.error('[LanguageContext] fetchSheets error:', err);
-      setError(err instanceof Error ? err.message : String(err));
+      if (!forceUrl) {
+        setError(err instanceof Error ? err.message : String(err));
+      }
     } finally {
-      setLoading(false);
+      if (!forceUrl) {
+        setLoading(false);
+      }
     }
   }, [sheetUrl]);
 
+  // 백그라운드에서 나머지 국가 데이터 프리로딩
+  const preloadOtherCountries = useCallback(async (currentCountryIndex = 0) => {
+    console.log('[LanguageContext] Starting background preload of other countries');
+    
+    // 현재 국가를 제외한 나머지 국가들
+    const countriesToPreload = DATA_SHEETS.map((url, index) => ({ url, index }))
+      .filter(({ index }) => index !== currentCountryIndex);
+    
+    // 순차적으로 프리로딩 (병렬로 하면 네트워크 부하가 클 수 있음)
+    for (const { url, index } of countriesToPreload) {
+      try {
+        // 이미 캐시에 있으면 스킵
+        if (dataCache.current[url]) {
+          console.log(`[LanguageContext] Country ${index} already cached, skipping`);
+          continue;
+        }
+        
+        // 로컬 스토리지 캐시 확인
+        try {
+          const cacheKey = `sheet_data_${url}`;
+          const cachedData = await AsyncStorage.getItem(cacheKey);
+          
+          if (cachedData) {
+            const { data: cachedRows, timestamp } = JSON.parse(cachedData);
+            const now = Date.now();
+            
+            // 캐시가 유효한 경우 (24시간 이내)
+            if (now - timestamp < CACHE_TTL) {
+              console.log(`[LanguageContext] Country ${index} already in AsyncStorage cache`);
+              dataCache.current[url] = cachedRows;
+              continue;
+            }
+          }
+        } catch (cacheError) {
+          console.warn('[LanguageContext] Cache read error during preload:', cacheError);
+        }
+        
+        console.log(`[LanguageContext] Preloading country ${index} in background`);
+        const rows = await fetchSheet(url);
+        
+        // 메모리 캐시에 저장
+        dataCache.current[url] = rows;
+        
+        // 로컬 스토리지에 저장
+        try {
+          const cacheKey = `sheet_data_${url}`;
+          const cacheData = {
+            data: rows,
+            timestamp: Date.now(),
+          };
+          await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheData));
+          console.log(`[LanguageContext] Country ${index} cached to AsyncStorage (background)`);
+        } catch (storageError) {
+          console.warn('[LanguageContext] Cache write error during preload:', storageError);
+        }
+      } catch (error) {
+        console.warn(`[LanguageContext] Failed to preload country ${index}:`, error);
+        // 프리로딩 실패해도 계속 진행
+      }
+    }
+    
+    console.log('[LanguageContext] Background preload completed');
+  }, []);
+
+  // 현재 선택된 국가 데이터 로드 (country 변경 시)
   useEffect(() => {
     fetchSheets();
   }, [fetchSheets]);
+
+  // 초기 로드 완료 후 백그라운드 프리로딩 시작 (한 번만 실행)
+  useEffect(() => {
+    if (!loading && !preloadStarted.current && data.length > 0) {
+      preloadStarted.current = true;
+      // 기본 국가 데이터 로드가 완료되면 백그라운드에서 나머지 국가 프리로딩 시작
+      setTimeout(() => {
+        preloadOtherCountries(country);
+      }, 500); // 약간의 딜레이를 두어 UI 반응성을 유지
+    }
+  }, [loading, data.length, country, preloadOtherCountries]);
 
   // 3. Process Data (When data or language changes)
   useEffect(() => {

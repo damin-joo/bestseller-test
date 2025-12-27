@@ -97,7 +97,7 @@ export default function BookDetail({ route, navigation }) {
   const [language, setLanguage] = useState(languageFromRoute || 'original');
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('author');
+  const [activeTab, setActiveTab] = useState('aboutBook');
   const [appLanguage, setAppLanguage] = useState('English');
   const [wikiModalVisible, setWikiModalVisible] = useState(false);
   const [wikiUrl, setWikiUrl] = useState('');
@@ -568,6 +568,12 @@ export default function BookDetail({ route, navigation }) {
         <View style={styles.bookHeaderContainer}>
           <View style={styles.bookHeader}>
             <View style={styles.bookImageContainer}>
+              {/* 순위 배지 - 이미지 컨테이너 상단 */}
+              {book.rank && (
+                <View style={styles.rankBadgeTop}>
+                  <Text style={styles.rankText}>#{book.rank}</Text>
+                </View>
+              )}
               {book.image && book.image.trim() ? (
                 <TouchableOpacity
                   onPress={() => {
@@ -601,37 +607,10 @@ export default function BookDetail({ route, navigation }) {
                   <Text style={styles.placeholderText}>No Image</Text>
                 </View>
               )}
-            </View>
-            <View style={styles.bookInfo}>
-              {/* 순위 및 제목 */}
-              <View style={styles.titleContainer}>
-                {book.rank && (
-                  <View style={styles.rankBadge}>
-                    <Text style={styles.rankText}>#{book.rank}</Text>
-                  </View>
-                )}
-                <Text style={styles.title}>{book.title}</Text>
-              </View>
-              {/* 작가 클릭 - Wikidata 확인 후 클릭 가능 */}
-              <TouchableOpacity onPress={() => searchAuthor(book.author)}>
-                <Text style={styles.author}>
-                  {language === 'korean' && book.author_kr
-                    ? book.author_kr
-                    : language === 'japanese' && book.author_ja
-                    ? book.author_ja
-                    : language === 'chinese' && book.author_zh
-                    ? book.author_zh
-                    : language === 'french' && book.author_fr
-                    ? book.author_fr
-                    : language === 'spanish' && book.author_es
-                    ? book.author_es
-                    : book.author || 'Unknown Author'}
-                </Text>
-              </TouchableOpacity>
-              {/* View on Store 버튼 - 작가 이름 아래 */}
+              {/* View on Store 버튼 - 이미지 아래 */}
               {book.link && (
                 <TouchableOpacity
-                  style={styles.viewStoreButton}
+                  style={styles.viewStoreButtonBelowImage}
                   onPress={async () => {
                     try {
                       const canOpen = await Linking.canOpenURL(book.link);
@@ -653,6 +632,30 @@ export default function BookDetail({ route, navigation }) {
                   </Text>
                 </TouchableOpacity>
               )}
+            </View>
+            <View style={styles.bookInfo}>
+              {/* 제목 - 순위 포함 */}
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  {book.rank ? `#${book.rank}: ${book.title}` : book.title}
+                </Text>
+              </View>
+              {/* 작가 클릭 - Wikidata 확인 후 클릭 가능 */}
+              <TouchableOpacity onPress={() => searchAuthor(book.author)}>
+                <Text style={styles.author}>
+                  {language === 'korean' && book.author_kr
+                    ? book.author_kr
+                    : language === 'japanese' && book.author_ja
+                    ? book.author_ja
+                    : language === 'chinese' && book.author_zh
+                    ? book.author_zh
+                    : language === 'french' && book.author_fr
+                    ? book.author_fr
+                    : language === 'spanish' && book.author_es
+                    ? book.author_es
+                    : book.author || 'Unknown Author'}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -988,6 +991,14 @@ const getStyles = (colors, isDark) =>
       marginRight: 8,
       marginBottom: 4,
     },
+    rankBadgeTop: {
+      backgroundColor: colors.link,
+      borderRadius: 12,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      alignSelf: 'flex-start',
+      marginBottom: 8,
+    },
     rankText: {
       fontSize: 14,
       fontWeight: 'bold',
@@ -1038,6 +1049,17 @@ const getStyles = (colors, isDark) =>
       justifyContent: 'center',
       alignSelf: 'flex-start',
       marginTop: 8,
+    },
+    viewStoreButtonBelowImage: {
+      backgroundColor: colors.link,
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'stretch',
+      marginTop: 12,
     },
     viewStoreText: {
       color: '#fff',

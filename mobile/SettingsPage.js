@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Linking,
   Image,
+  Modal,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -45,6 +46,8 @@ export const getLanguageOptions = (translationsData, currentLanguage) => {
 export default function SettingsPage({ navigation }) {
   const { language, setLanguage, userLanguage, setUserLanguage } = useLanguage();
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [isSlideshowIntervalOpen, setIsSlideshowIntervalOpen] = useState(false);
+  const [slideshowInterval, setSlideshowInterval] = useState({ hours: 0, minutes: 0, seconds: 5 }); // 기본값: 5초
   const { theme, updateTheme, isDark, colors } = useTheme();
   
   // JSON 파일에서 언어 옵션 가져오기
@@ -69,7 +72,11 @@ export default function SettingsPage({ navigation }) {
         credits: 'Credits',
         openSourceInfo: 'Open Source Info',
         appVersion: 'App Version',
+        slideshowInterval: 'Slideshow Interval',
       };
+      if (key === 'slideshowInterval') {
+        return translationsData?.settings?.slideshowInterval?.[userLanguage] || translationsData?.settings?.slideshowInterval?.['1'] || fallbacks[key];
+      }
       return fallbacks[key] || key;
     }
     
@@ -205,6 +212,21 @@ export default function SettingsPage({ navigation }) {
       color: colors.secondaryText,
       fontWeight: '500',
     },
+    slideshowIntervalPicker: {
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    pickerLabel: {
+      fontSize: 14,
+      fontWeight: '600',
+      marginBottom: 8,
+    },
+    settingSubLabel: {
+      fontSize: 12,
+      color: colors.secondaryText,
+    },
   }), [colors, isDark]);
 
   return (
@@ -268,6 +290,104 @@ export default function SettingsPage({ navigation }) {
                   )}
                 </TouchableOpacity>
               ))}
+            </View>
+          )}
+        </View>
+
+        {/* Slideshow Interval */}
+        <View>
+          <TouchableOpacity
+            style={dynamicStyles.settingItem}
+            activeOpacity={0.7}
+            onPress={() => setIsSlideshowIntervalOpen(!isSlideshowIntervalOpen)}
+          >
+            <Text style={dynamicStyles.settingLabel}>
+              {getTranslation('slideshowInterval')}
+            </Text>
+            <View style={styles.languageContainer}>
+              <Text style={dynamicStyles.languageValue}>
+                {slideshowInterval.hours > 0 && `${slideshowInterval.hours}h `}
+                {slideshowInterval.minutes > 0 && `${slideshowInterval.minutes}m `}
+                {slideshowInterval.seconds > 0 && `${slideshowInterval.seconds}s`}
+                {slideshowInterval.hours === 0 && slideshowInterval.minutes === 0 && slideshowInterval.seconds === 0 && 'Not set'}
+              </Text>
+              <Icon name={isSlideshowIntervalOpen ? "chevron-up" : "chevron-down"} size={20} color={colors.secondaryText} />
+            </View>
+          </TouchableOpacity>
+
+          {isSlideshowIntervalOpen && (
+            <View style={[dynamicStyles.slideshowIntervalPicker, { backgroundColor: colors.secondaryBackground }]}>
+              <Text style={[dynamicStyles.pickerLabel, { color: colors.text }]}>Hours</Text>
+              <ScrollView style={styles.timePickerScrollView} nestedScrollEnabled={true}>
+                <View style={styles.timePickerRow}>
+                  {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                    <TouchableOpacity
+                      key={hour}
+                      style={[
+                        styles.timePickerButton,
+                        { borderColor: colors.border },
+                        slideshowInterval.hours === hour && { backgroundColor: colors.link },
+                      ]}
+                      onPress={() => setSlideshowInterval({ ...slideshowInterval, hours: hour })}
+                    >
+                      <Text style={[
+                        styles.timePickerButtonText,
+                        { color: slideshowInterval.hours === hour ? '#fff' : colors.text },
+                      ]}>
+                        {hour}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
+
+              <Text style={[dynamicStyles.pickerLabel, { color: colors.text, marginTop: 16 }]}>Minutes</Text>
+              <ScrollView style={styles.timePickerScrollView} nestedScrollEnabled={true}>
+                <View style={styles.timePickerRow}>
+                  {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
+                    <TouchableOpacity
+                      key={minute}
+                      style={[
+                        styles.timePickerButton,
+                        { borderColor: colors.border },
+                        slideshowInterval.minutes === minute && { backgroundColor: colors.link },
+                      ]}
+                      onPress={() => setSlideshowInterval({ ...slideshowInterval, minutes: minute })}
+                    >
+                      <Text style={[
+                        styles.timePickerButtonText,
+                        { color: slideshowInterval.minutes === minute ? '#fff' : colors.text },
+                      ]}>
+                        {minute}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
+
+              <Text style={[dynamicStyles.pickerLabel, { color: colors.text, marginTop: 16 }]}>Seconds</Text>
+              <ScrollView style={styles.timePickerScrollView} nestedScrollEnabled={true}>
+                <View style={styles.timePickerRow}>
+                  {Array.from({ length: 60 }, (_, i) => i).map((second) => (
+                    <TouchableOpacity
+                      key={second}
+                      style={[
+                        styles.timePickerButton,
+                        { borderColor: colors.border },
+                        slideshowInterval.seconds === second && { backgroundColor: colors.link },
+                      ]}
+                      onPress={() => setSlideshowInterval({ ...slideshowInterval, seconds: second })}
+                    >
+                      <Text style={[
+                        styles.timePickerButtonText,
+                        { color: slideshowInterval.seconds === second ? '#fff' : colors.text },
+                      ]}>
+                        {second}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
             </View>
           )}
         </View>
@@ -459,5 +579,25 @@ const styles = StyleSheet.create({
   linkButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
+  },
+  timePickerScrollView: {
+    maxHeight: 120,
+  },
+  timePickerRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  timePickerButton: {
+    width: 40,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+  },
+  timePickerButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

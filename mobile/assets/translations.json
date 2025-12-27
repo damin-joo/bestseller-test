@@ -241,11 +241,11 @@
       "6": "Enlace"
     },
     "sunnyGamesApps": {
-      "0": "Sunny's Games and Apps",
+      "0": "써니의 게임과 앱",
       "1": "Sunny's Games and Apps",
-      "2": "Sunny's Games and Apps",
-      "3": "Sunny's Games and Apps",
-      "4": "Sunny's Games and Apps",
+      "2": "Sunnyのゲームとアプリ",
+      "3": "Sunny的游戏和应用",
+      "4": "Sunny的遊戲和應用",
       "5": "Jeux et applications de Sunny",
       "6": "Juegos y aplicaciones de Sunny"
     },
@@ -275,6 +275,186 @@
       "4": "應用程式版本",
       "5": "Version de l'application",
       "6": "Versión de la aplicación"
+    },
+    "howToUse": {
+      "0": "사용 방법",
+      "1": "How To Use",
+      "2": "使い方",
+      "3": "使用方法",
+      "4": "使用方法",
+      "5": "Comment utiliser",
+      "6": "Cómo usar"
+    },
+    "userData": {
+      "0": "사용자 데이터",
+      "1": "User Data",
+      "2": "ユーザーデータ",
+      "3": "用户数据",
+      "4": "用戶資訊",
+      "5": "Données utilisateur",
+      "6": "Datos del usuario"
+    },
+    "startDate": {
+      "0": "시작일",
+      "1": "Start Date",
+      "2": "開始日",
+      "3": "开始日期",
+      "4": "開始日期",
+      "5": "Date de début",
+      "6": "Fecha de inicio"
+    },
+    "numberOfUses": {
+      "0": "사용횟수",
+      "1": "Number of uses",
+      "2": "使用回数",
+      "3": "使用次数",
+      "4": "使用次數",
+      "5": "Nombre d'utilisations",
+      "6": "Número de usos"
+    },
+    "notification": {
+      "0": "알림",
+      "1": "Notification",
+      "2": "通知",
+      "3": "通知",
+      "4": "通知",
+      "5": "Notification",
+      "6": "Notificación"
+    },
+    "sound": {
+      "0": "사운드",
+      "1": "Sound",
+      "2": "サウンド",
+      "3": "声音",
+      "4": "聲音",
+      "5": "Son",
+      "6": "Sonido"
+    },
+    "effects": {
+      "0": "효과음",
+      "1": "Effects",
+      "2": "効果音",
+      "3": "音效",
+      "4": "效果",
+      "5": "Effets",
+      "6": "Efectos"
+    },
+    "bgm": {
+      "0": "배경음",
+      "1": "BGM",
+      "2": "背景音",
+      "3": "背景音乐",
+      "4": "背景音樂",
+      "5": "Musique de fond",
+      "6": "Música de fondo"
+    },
+    "haptics": {
+      "0": "진동",
+      "1": "Haptics",
+      "2": "振動",
+      "3": "震动",
+      "4": "震動",
+      "5": "Retour haptique",
+      "6": "Háptica"
+    },
+    "lookAndFeel": {
+      "0": "스타일",
+      "1": "Look & Feel",
+      "2": "スタイル",
+      "3": "外观",
+      "4": "外觀",
+      "5": "Apparence",
+      "6": "Apariencia"
+    },
+    "font": {
+      "0": "폰트",
+      "1": "Font",
+      "2": "フォント",
+      "3": "字体",
+      "4": "字體",
+      "5": "Police",
+      "6": "Fuente"
+    },
+    "fontSize": {
+      "0": "폰트 크기",
+      "1": "Font Size",
+      "2": "フォントサイズ",
+      "3": "字号",
+      "4": "字號",
+      "5": "Taille de police",
+      "6": "Tamaño de fuente"
+    },
+    "fontColor": {
+      "0": "폰트 색",
+      "1": "Font Color",
+      "2": "フォントカラー",
+      "3": "字体颜色",
+      "4": "字體顏色",
+      "5": "Couleur de police",
+      "6": "Color de fuente"
+    },
+    "backgroundColor": {
+      "0": "배경색",
+      "1": "Background Color",
+      "2": "背景色",
+      "3": "背景颜色",
+      "4": "背景顏色",
+      "5": "Couleur d'arrière-plan",
+      "6": "Color de fondo"
+    },
+    "screenMode": {
+      "0": "화면 모드",
+      "1": "Theme",
+      "2": "画面モード",
+      "3": "屏幕模式",
+      "4": "螢幕模式",
+      "5": "Mode écran",
+      "6": "Modo de pantalla"
+    },
+    "slideshowInterval": {
+      "0": "슬라이드쇼 간격",
+      "1": "Slideshow Interval",
+      "2": "スライドショー間隔",
+      "3": "幻灯片播放间隔",
+      "4": "幻燈片播放間隔",
+      "5": "Intervalle de diaporama",
+      "6": "Intervalo de presentación"
+    },
+    "shareTheApp": {
+      "0": "앱 공유하기",
+      "1": "Share the App",
+      "2": "このアプリを共有する",
+      "3": "分享应用",
+      "4": "分享應用程式",
+      "5": "Partager l'application",
+      "6": "Compartir la aplicación"
+    },
+    "writeAReview": {
+      "0": "리뷰 남기기",
+      "1": "Write a Review",
+      "2": "レビューを残す",
+      "3": "评论",
+      "4": "評論",
+      "5": "Écrire un avis",
+      "6": "Escribir una reseña"
+    },
+    "termsAndConditions": {
+      "0": "Terms & Conditions",
+      "1": "Terms & Conditions",
+      "2": "Terms & Conditions",
+      "3": "Terms & Conditions",
+      "4": "Terms & Conditions",
+      "5": "Terms & Conditions",
+      "6": "Terms & Conditions"
+    },
+    "privacyPolicy": {
+      "0": "Privacy Policy",
+      "1": "Privacy Policy",
+      "2": "Privacy Policy",
+      "3": "Privacy Policy",
+      "4": "Privacy Policy",
+      "5": "Privacy Policy",
+      "6": "Privacy Policy"
     }
   },
   "bookDetail": {
@@ -369,6 +549,108 @@
       "4": "設定",
       "5": "Paramètres",
       "6": "Configuración"
+    }
+  },
+  "sunnyApps": {
+    "skyPeacemaker": {
+      "name": {
+        "0": "스카이 피스메이커",
+        "1": "Sky Peacemaker",
+        "2": "スカイピースメーカー",
+        "3": "Sky Peacemaker",
+        "4": "Sky Peacemaker",
+        "5": "Sky Peacemaker",
+        "6": "Sky Peacemaker"
+      },
+      "description": {
+        "0": "The Ultimate Fighter Jet Experience on Mobile",
+        "1": "The Ultimate Fighter Jet Experience on Mobile",
+        "2": "The Ultimate Fighter Jet Experience on Mobile",
+        "3": "The Ultimate Fighter Jet Experience on Mobile",
+        "4": "The Ultimate Fighter Jet Experience on Mobile",
+        "5": "The Ultimate Fighter Jet Experience on Mobile",
+        "6": "The Ultimate Fighter Jet Experience on Mobile"
+      }
+    },
+    "worldMovieTrailer": {
+      "name": {
+        "0": "월드 무비 트레일러",
+        "1": "World Movie Trailer",
+        "2": "ワールドムービートレーラー",
+        "3": "World Movie Trailer",
+        "4": "World Movie Trailer",
+        "5": "World Movie Trailer",
+        "6": "World Movie Trailer"
+      },
+      "description": {
+        "0": "All your global movie trailers and box office rankings in one place!",
+        "1": "All your global movie trailers and box office rankings in one place!",
+        "2": "All your global movie trailers and box office rankings in one place!",
+        "3": "All your global movie trailers and box office rankings in one place!",
+        "4": "All your global movie trailers and box office rankings in one place!",
+        "5": "All your global movie trailers and box office rankings in one place!",
+        "6": "All your global movie trailers and box office rankings in one place!"
+      }
+    },
+    "findFour": {
+      "name": {
+        "0": "파인드 포",
+        "1": "Find Four",
+        "2": "ファインドフォー",
+        "3": "Find Four",
+        "4": "Find Four",
+        "5": "Find Four",
+        "6": "Find Four"
+      },
+      "description": {
+        "0": "Spot 4 differences and have fun anytime!",
+        "1": "Spot 4 differences and have fun anytime!",
+        "2": "Spot 4 differences and have fun anytime!",
+        "3": "Spot 4 differences and have fun anytime!",
+        "4": "Spot 4 differences and have fun anytime!",
+        "5": "Spot 4 differences and have fun anytime!",
+        "6": "Spot 4 differences and have fun anytime!"
+      }
+    },
+    "decibella": {
+      "name": {
+        "0": "데시벨라",
+        "1": "decibella",
+        "2": "デシベラ",
+        "3": "decibella",
+        "4": "decibella",
+        "5": "decibella",
+        "6": "decibella"
+      },
+      "description": {
+        "0": "Your Pocket-Sized, Smart Sound Level Meter",
+        "1": "Your Pocket-Sized, Smart Sound Level Meter",
+        "2": "Your Pocket-Sized, Smart Sound Level Meter",
+        "3": "Your Pocket-Sized, Smart Sound Level Meter",
+        "4": "Your Pocket-Sized, Smart Sound Level Meter",
+        "5": "Your Pocket-Sized, Smart Sound Level Meter",
+        "6": "Your Pocket-Sized, Smart Sound Level Meter"
+      }
+    },
+    "dualFlashlight": {
+      "name": {
+        "0": "듀얼 플래시 라이트",
+        "1": "Dual Flashlight",
+        "2": "デュアル・フラッシュライト",
+        "3": "Dual Flashlight",
+        "4": "Dual Flashlight",
+        "5": "Dual Flashlight",
+        "6": "Dual Flashlight"
+      },
+      "description": {
+        "0": "Turn your smartphone into the ultimate flashlight",
+        "1": "Turn your smartphone into the ultimate flashlight",
+        "2": "Turn your smartphone into the ultimate flashlight",
+        "3": "Turn your smartphone into the ultimate flashlight",
+        "4": "Turn your smartphone into the ultimate flashlight",
+        "5": "Turn your smartphone into the ultimate flashlight",
+        "6": "Turn your smartphone into the ultimate flashlight"
+      }
     }
   }
 }
