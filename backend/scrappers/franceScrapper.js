@@ -23,11 +23,11 @@ async function fetchPageBooks(browser) {
             const li = items[i];
             const detailHref = li.querySelector('div a.a-link-normal')?.href || '';
             const title = li.querySelector('div a.a-link-normal span div')?.innerText || '';
-            const image = li.querySelector('div.a-section img')?.src || '';
+            // const image = li.querySelector('div.a-section img')?.src || '';
             const author = li.querySelector('div a.a-size-small div')?.innerText || '';
 
-            if (title && author && image && detailHref) {
-                books.push({ title, author, image, detailHref });
+            if (title && author && detailHref) {
+                books.push({ title, author, detailHref });
                 links.push(detailHref);
             }
         };
@@ -44,10 +44,13 @@ async function fetchBookDetail(browser, link) {
     await detailPage.goto(link, { waitUntil: 'networkidle2' });
 
     const data = await detailPage.evaluate(() => {
+        const image =
+            document.querySelector('#landingImage')?.getAttribute('data-old-hires') ||
+            document.querySelector('#landingImage')?.src || '';
         const description = document.querySelector('#bookDescription_feature_div div.a-expander-content.a-expander-partial-collapse-content')?.innerText.trim() || '';
         const reviewSection = document.querySelector('#editorialReviews_feature_div div.a-section.a-spacing-small.a-padding-base')?.innerText.trim() || '';
         const writerInfo = document.querySelector('div._about-the-author-card_style_cardContentDiv__FXLPd div.a-fixed-left-grid-col.a-col-right div.a-cardui-body')?.innerText.trim() || '';
-        return { description, other: reviewSection, writerInfo };
+        return { image, description, other: reviewSection, writerInfo };
     });
 
     await detailPage.close();
@@ -74,7 +77,8 @@ export default async function amazonScrapper() {
         );
 
         results.forEach((res, idx) => {
-            const data = res.status === 'fulfilled' ? res.value : { description: '', other: '', writerInfo: '' }; 
+            const data = res.status === 'fulfilled' ? res.value : { image: '', description: '', other: '', writerInfo: '' }; 
+            batchBooks[idx].image = data.image;
             batchBooks[idx].description = data.description;
             batchBooks[idx].other = data.other;
             batchBooks[idx].writerInfo = data.writerInfo;

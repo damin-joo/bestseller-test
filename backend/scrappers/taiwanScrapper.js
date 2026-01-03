@@ -8,7 +8,7 @@ function sleep(ms) {
 
 async function fetchPageBooks(browser) {
     const page = await browser.newPage();
-    const url = "https://www.books.com.tw/web/sys_saletopb/books/?attribute=";
+    const url = "https://www.books.com.tw/web/sys_saletopb/books/?attribute=7";
     await page.goto(url, { waitUntil: "networkidle2" });
     await sleep(2000);
 
@@ -23,7 +23,8 @@ async function fetchPageBooks(browser) {
             const li = items[i];
             const title = li.querySelector("div.type02_bd-a h4 a")?.innerText.trim() || "";
             const detailHref = li.querySelector("a")?.href || "";
-            const image = li.querySelector("a img")?.src || "";
+            const raw_img = li.querySelector("a img")?.src || "";
+            const image = decodeURIComponent(raw_img.split("i=")[1]?.split("&")[0] || "");
             const author = li.querySelector("div.type02_bd-a ul.msg li a")?.innerText.trim() || "";
 
             if (title && author && image && detailHref) {

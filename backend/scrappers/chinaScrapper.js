@@ -23,11 +23,11 @@ async function fetchPageBooks(browser) {
             const li = items[i];
             const detailHref = li.querySelector('div.infor h2 a')?.href || '';
             const title = li.querySelector('div.infor h2 a')?.innerText || '';
-            const image = li.querySelector('div.cover a img')?.src || '';
+            // const image = li.querySelector('div.cover a img')?.src || '';
             const author = li.querySelector('div.infor div.author a')?.innerText || '';
 
-            if (title && author && image && detailHref) {
-                books.push({ title, author, image, detailHref });
+            if (title && author && detailHref) {
+                books.push({ title, author, detailHref });
                 links.push(detailHref);
             }
         };
@@ -44,10 +44,12 @@ async function fetchBookDetail(browser, link) {
     await detailPage.goto(link, { waitUntil: 'networkidle2' });
 
     const data = await detailPage.evaluate(() => {
+        let image = document.querySelector('#bigImgSrc')?.getAttribute('value')?.trim() || '';
+        if (image && image.startsWith('//')) { image = `https:${image}`; }
         const description = document.querySelector('#brief p')?.innerText.trim() || '';
         const other = document.querySelector('#specialist > p')?.innerText.trim() || '';
         const writerInfo = document.querySelector('#zuozhejianjie p')?.innerText.trim() || '';
-        return { description, other, writerInfo };
+        return { image, description, other, writerInfo };
     });
 
     await detailPage.close();
@@ -74,7 +76,8 @@ export default async function chinaScrapper() {
         );
 
         results.forEach((res, idx) => {
-            const data = res.status === 'fulfilled' ? res.value : { description: '', other: '', writerInfo: '' }; 
+            const data = res.status === 'fulfilled' ? res.value : { image: '', description: '', other: '', writerInfo: '' }; 
+            batchBooks[idx].image = data.image;
             batchBooks[idx].description = data.description;
             batchBooks[idx].other = data.other;
             batchBooks[idx].writerInfo = data.writerInfo;
