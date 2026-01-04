@@ -66,7 +66,14 @@
   },
   {
     "original": "韓國瑜",
-    "source": "translate_failed"
+    "qid": "Q8274095",
+    "ja": "韓国瑜",
+    "ko": "한궈위",
+    "en": "Daniel Han",
+    "zh": "韓國瑜",
+    "fr": "Han Kuo-yu",
+    "es": "Han Kuo-yu",
+    "source": "wikidata"
   },
   {
     "original": "查理．蒙格",
@@ -74,7 +81,14 @@
   },
   {
     "original": "尾田榮一郎",
-    "source": "translate_failed"
+    "qid": "Q2010",
+    "ja": "尾田栄一郎",
+    "ko": "오다 에이이치로",
+    "en": "Eiichiro Oda",
+    "zh": "尾田荣一郎",
+    "fr": "Eiichirō Oda",
+    "es": "Eiichirō Oda",
+    "source": "wikidata"
   },
   {
     "original": "花園／Rose（晴夜）",
@@ -86,11 +100,19 @@
   },
   {
     "original": "佐倉リコ",
-    "source": "translate_failed"
+    "qid": "Q133516575",
+    "ja": "佐倉リコ",
+    "ko": "사쿠라 리코",
+    "en": "SAKURA Riko",
+    "source": "wikidata"
   },
   {
     "original": "王崇禮",
-    "source": "translate_failed"
+    "qid": "Q45481585",
+    "en": "Wang Chongli",
+    "zh": "王崇禮",
+    "es": "Wang Chongli",
+    "source": "wikidata"
   },
   {
     "original": "闕又上",
@@ -102,11 +124,18 @@
   },
   {
     "original": "黃越綏",
-    "source": "translate_failed"
+    "qid": "Q8969102",
+    "en": "Ellen Huang",
+    "zh": "黃越綏",
+    "fr": "Ellen Huang",
+    "es": "Ellen Huang",
+    "source": "wikidata"
   },
   {
     "original": "蔡亞恩",
-    "source": "translate_failed"
+    "qid": "Q85884009",
+    "zh": "蔡亞恩",
+    "source": "wikidata"
   },
   {
     "original": "厘てく",
@@ -118,7 +147,9 @@
   },
   {
     "original": "Peter Su",
-    "source": "translate_failed"
+    "qid": "Q102312129",
+    "en": "Peter Su",
+    "source": "wikidata"
   },
   {
     "original": "林家泰",

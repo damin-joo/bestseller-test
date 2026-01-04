@@ -32,21 +32,41 @@
   },
   {
     "original": "Lucy Steeds",
-    "qid": "Q131096496",
+    "qid": "Q125454886",
     "en": "Lucy Steeds",
+    "fr": "Lucy Steeds",
+    "es": "Lucy Steeds",
     "source": "wikidata"
   },
   {
     "original": "Jeff Kinney",
-    "source": "wikidata_not_found"
+    "qid": "Q311704",
+    "ja": "ジェフ・キニー",
+    "ko": "제프 키니",
+    "zh": "杰夫·金尼",
+    "fr": "Jeff Kinney",
+    "es": "Jeff Kinney",
+    "source": "wikidata"
   },
   {
     "original": "Mikey Please",
-    "source": "wikidata_not_found"
+    "qid": "Q2506704",
+    "ja": "マイキー・プリーズ",
+    "en": "Michael Please",
+    "zh": "迈克尔·普莱曾斯",
+    "fr": "Michael Please",
+    "es": "Michael Please",
+    "source": "wikidata"
   },
   {
     "original": "Mary Berry",
-    "source": "wikidata_not_found"
+    "qid": "Q12035946",
+    "ja": "メアリー・ベリー",
+    "en": "Mary Berry",
+    "zh": "瑪莉·貝利",
+    "fr": "Mary Berry",
+    "es": "Mary Berry",
+    "source": "wikidata"
   },
   {
     "original": "Guinness World Records Limited",
@@ -54,7 +74,11 @@
   },
   {
     "original": "Yael van der Wouden",
-    "source": "wikidata_not_found"
+    "qid": "Q126900362",
+    "en": "Yael van der Wouden",
+    "fr": "Yael van der Wouden",
+    "es": "Yael van der Wouden",
+    "source": "wikidata"
   },
   {
     "original": "Ginger Fox",
@@ -62,27 +86,62 @@
   },
   {
     "original": "Jamie Oliver",
-    "source": "wikidata_not_found"
+    "qid": "Q190051",
+    "ja": "ジェイミー・オリヴァー",
+    "ko": "제이미 올리버",
+    "en": "Jamie Oliver",
+    "zh": "杰米·奧利弗",
+    "fr": "Jamie Oliver",
+    "es": "Jamie Oliver",
+    "source": "wikidata"
   },
   {
     "original": "Dan Brown",
-    "source": "wikidata_not_found"
+    "qid": "Q7345",
+    "ja": "ダン・ブラウン",
+    "ko": "댄 브라운",
+    "en": "Dan Brown",
+    "zh": "丹·布朗",
+    "fr": "Dan Brown",
+    "es": "Dan Brown",
+    "source": "wikidata"
   },
   {
     "original": "Bob Mortimer",
-    "source": "wikidata_not_found"
+    "qid": "Q4933453",
+    "en": "Bob Mortimer",
+    "fr": "Bob Mortimer",
+    "es": "Bob Mortimer",
+    "source": "wikidata"
   },
   {
     "original": "David Szalay",
-    "source": "wikidata_not_found"
+    "qid": "Q18294482",
+    "ko": "데이비드 솔로이",
+    "en": "David Szalay",
+    "zh": "大卫·绍洛伊",
+    "fr": "David Szalay",
+    "es": "David Szalay",
+    "source": "wikidata"
   },
   {
     "original": "Andrew Miller",
-    "source": "wikidata_not_found"
+    "qid": "Q580927",
+    "en": "Andrew Miller",
+    "fr": "Andrew Miller",
+    "es": "Andrew Miller",
+    "source": "wikidata"
   },
   {
     "original": "Elif Shafak",
-    "source": "wikidata_not_found"
+    "qid": "Q270739",
+    "ja": "エリフ・シャファク",
+    "ko": "엘리프 샤팍",
+    "en": "Elif Şafak",
+    "zh": "艾丽芙·沙法克",
+    "fr": "Elif Shafak",
+    "es": "Elif Shafak",
+    "source": "wikidata"
   },
   {
     "original": "Tim Siadatan",
@@ -90,15 +149,31 @@
   },
   {
     "original": "Jeremy Clarkson",
-    "source": "wikidata_not_found"
+    "qid": "Q216160",
+    "ja": "ジェレミー・クラークソン",
+    "ko": "제러미 클라크슨",
+    "en": "Jeremy Clarkson",
+    "zh": "杰里米·克拉克森",
+    "fr": "Jeremy Clarkson",
+    "es": "Jeremy Clarkson",
+    "source": "wikidata"
   },
   {
     "original": "David Nicholls",
-    "source": "wikidata_not_found"
+    "qid": "Q950949",
+    "ja": "デイヴィッド・ニコルズ",
+    "ko": "데이비드 니컬스",
+    "en": "David Nicholls",
+    "zh": "大衛·尼科爾斯(作家)",
+    "fr": "David Nicholls",
+    "es": "David Nicholls",
+    "source": "wikidata"
   },
   {
     "original": "Alison Espach",
-    "source": "wikidata_not_found"
+    "qid": "Q131835535",
+    "en": "Alison Espach",
+    "source": "wikidata"
   },
   {
     "original": "Legami",
@@ -106,15 +181,35 @@
   },
   {
     "original": "Chloe Dalton",
-    "source": "wikidata_not_found"
+    "qid": "Q26209569",
+    "ja": "クロエ・ダルトン",
+    "ko": "클로이 돌턴",
+    "en": "Chloe Dalton",
+    "zh": "克蘿伊·達登",
+    "fr": "Chloe Dalton",
+    "es": "Chloe Dalton",
+    "source": "wikidata"
   },
   {
     "original": "Seishi Yokomizo",
-    "source": "wikidata_not_found"
+    "qid": "Q1072588",
+    "ja": "横溝正史",
+    "ko": "요코미조 세이시",
+    "en": "Seishi Yokomizo",
+    "zh": "横構正史",
+    "fr": "Seishi Yokomizo",
+    "es": "Seishi Yokomizo",
+    "source": "wikidata"
   },
   {
     "original": "Mel Robbins",
-    "source": "wikidata_not_found"
+    "qid": "Q16735271",
+    "ja": "メル・ロビンス",
+    "en": "Mel Robbins",
+    "zh": "梅爾·羅賓斯",
+    "fr": "Mel Robbins",
+    "es": "Mel Robbins",
+    "source": "wikidata"
   },
   {
     "original": "Map Men",
@@ -126,6 +221,13 @@
   },
   {
     "original": "Virginia Roberts Giuffre",
-    "source": "wikidata_not_found"
+    "qid": "Q78473599",
+    "ja": "ヴァージニア・ロバーツ・ジュフリー",
+    "ko": "버지니아 주프레",
+    "en": "Virginia Roberts Giuffre",
+    "zh": "弗吉尼亚·朱弗雷",
+    "fr": "Virginia Roberts Giuffre",
+    "es": "Virginia Giuffre",
+    "source": "wikidata"
   }
 ]

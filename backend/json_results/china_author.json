@@ -54,7 +54,13 @@
   },
   {
     "original": "陈忠实",
-    "source": "translate_failed"
+    "qid": "Q3369454",
+    "ja": "陳忠実",
+    "en": "Chen Zhongshi",
+    "zh": "陳忠實",
+    "fr": "Chen Zhongshi",
+    "es": "Chen Zhongshi",
+    "source": "wikidata"
   },
   {
     "original": "[瑞士]薄复礼 著，严强/席伟 译",
@@ -74,7 +80,14 @@
   },
   {
     "original": "余华",
-    "source": "translate_failed"
+    "qid": "Q379520",
+    "ja": "余華",
+    "ko": "위화",
+    "en": "Yu Hua",
+    "zh": "余華",
+    "fr": "Yu Hua",
+    "es": "Yu Hua",
+    "source": "wikidata"
   },
   {
     "original": "郑逸梅著",
@@ -86,11 +99,25 @@
   },
   {
     "original": "老舍",
-    "source": "translate_failed"
+    "qid": "Q315167",
+    "ja": "老舎",
+    "ko": "라오서",
+    "en": "Lao She",
+    "zh": "老舍",
+    "fr": "Lao She",
+    "es": "Lao She",
+    "source": "wikidata"
   },
   {
     "original": "梁实秋",
-    "source": "translate_failed"
+    "qid": "Q6539998",
+    "ja": "梁実秋",
+    "ko": "량스추",
+    "en": "Liang Shih-chiu",
+    "zh": "梁实秋",
+    "fr": "Liang Shih-chiu",
+    "es": "Liang Shih-chiu",
+    "source": "wikidata"
   },
   {
     "original": "黄恽",
@@ -102,7 +129,11 @@
   },
   {
     "original": "任翔",
-    "source": "translate_failed"
+    "qid": "Q45661591",
+    "en": "Ren Xiang",
+    "zh": "任翔",
+    "es": "Ren Xiang",
+    "source": "wikidata"
   },
   {
     "original": "[法]莫泊桑 著，高燕/谭晓春绘",
@@ -122,7 +153,11 @@
   },
   {
     "original": "张哲",
-    "source": "translate_failed"
+    "qid": "Q45509669",
+    "en": "Zhang Zhe",
+    "zh": "張哲",
+    "es": "Zhang Zhe",
+    "source": "wikidata"
   },
   {
     "original": "弗兰茨·卡夫卡",

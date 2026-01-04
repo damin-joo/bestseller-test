@@ -5,15 +5,53 @@ import translate from '@vitalets/google-translate-api';
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+async function fetchWithRetry(url, retries = 3, delay = 2000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url);
 
+      // Rate limit 체크
+      if (res.status === 429) {
+        console.warn(`⏳ Rate limit hit, waiting ${delay * (i + 1)}ms...`);
+        await sleep(delay * (i + 1));
+        continue;
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      return await res.json();
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      console.warn(`⚠️ Retry ${i + 1}/${retries}:`, e.message);
+      await sleep(delay * (i + 1));
+    }
+  }
+}
 function detectSearchLang(author) {
   if (/[\u3040-\u30ff]/.test(author)) return 'ja';
   if (/[\u4e00-\u9fff]/.test(author)) return 'zh';
   if (/[\uac00-\ud7af]/.test(author)) return 'ko';
   return 'en';
 }
+// 일본어 작가 이름 정리 함수
+function cleanJapaneseAuthorName(name) {
+  // 【著】, 【イラスト】, 【編】 등 제거
+  let cleaned = name.replace(/【[^】]+】/g, '');
 
+  // / 로 구분된 경우 첫 번째만 사용
+  cleaned = cleaned.split('/')[0].trim();
+
+  // 공백 제거
+  cleaned = cleaned.replace(/\s+/g, '');
+
+  return cleaned;
+}
 async function searchWikidata(name) {
+  const cleanedName = /[\u3040-\u30ff\u4e00-\u9fff]/.test(name)
+    ? cleanJapaneseAuthorName(name)
+    : name;
   const lang = detectSearchLang(name);
   const searchUrl =
     `https://www.wikidata.org/w/api.php?action=wbsearchentities` +
@@ -21,7 +59,7 @@ async function searchWikidata(name) {
     `&language=${lang}` +
     `&limit=5&format=json`;
 
-  const res = await fetch(searchUrl).then(r => r.json());
+  const res = await fetchWithRetry(searchUrl);
   if (!res.search || res.search.length === 0) return null;
   return res.search.map(r => r.id);
 }
@@ -32,7 +70,7 @@ async function isHuman(qid) {
     `&ids=${qid}` +
     `&props=claims&format=json`;
 
-  const res = await fetch(url).then(r => r.json());
+  const res = await fetchWithRetry(url);
   const claims = res.entities[qid]?.claims;
   return claims?.P31?.some(c => c.mainsnak.datavalue?.value.id === 'Q5');
 }
@@ -64,10 +102,19 @@ async function getWikidataLabels(qid) {
 }
 
 async function normalizeAuthor(author, fallbackLang) {
+  // 원본 이름 저장
+  const originalName = author;
+
+  // 일본어 이름 정리
+  const cleanedName = /[\u3040-\u30ff\u4e00-\u9fff]/.test(author)
+    ? cleanJapaneseAuthorName(author)
+    : author;
+
   try {
-    const qids = await searchWikidata(author);
+    const qids = await searchWikidata(cleanedName);
     if (qids) {
       for (const qid of qids) {
+        await sleep(500);
         if (await isHuman(qid)) {
           const wiki = await getWikidataLabels(qid);
           if (wiki) {
@@ -121,7 +168,7 @@ async function processJapanAuthors() {
     const normalized = await normalizeAuthor(author, 'en');
     results.push(normalized);
     console.log(`✔ ${author} → ${normalized.source}`);
-    await sleep(1200);
+    await sleep(2500);
   }
 
   fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));

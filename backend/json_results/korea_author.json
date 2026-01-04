@@ -35,11 +35,21 @@
   },
   {
     "original": "프리드리히 니체",
-    "source": "translate_failed"
+    "qid": "Q9358",
+    "ja": "フリードリヒ・ニーチェ",
+    "ko": "프리드리히 니체",
+    "en": "Friedrich Nietzsche",
+    "zh": "弗里德里希·尼采",
+    "fr": "Friedrich Nietzsche",
+    "es": "Friedrich Nietzsche",
+    "source": "wikidata"
   },
   {
     "original": "최서영",
-    "source": "translate_failed"
+    "qid": "Q102267471",
+    "ko": "최서영",
+    "en": "Suhyoung Choi",
+    "source": "wikidata"
   },
   {
     "original": "성해나",
@@ -47,7 +57,10 @@
   },
   {
     "original": "한로로",
-    "source": "translate_failed"
+    "qid": "Q134958723",
+    "ko": "한로로",
+    "en": "Hanroro",
+    "source": "wikidata"
   },
   {
     "original": "박곰희",
@@ -59,11 +72,17 @@
   },
   {
     "original": "채은미",
-    "source": "translate_failed"
+    "qid": "Q136449477",
+    "ko": "채은미",
+    "source": "wikidata"
   },
   {
     "original": "김상현",
-    "source": "translate_failed"
+    "qid": "Q40616611",
+    "ko": "김상현",
+    "en": "Sang-Hyun Kim",
+    "es": "Sang-Hyun Kim",
+    "source": "wikidata"
   },
   {
     "original": "김도윤 외",
@@ -71,11 +90,23 @@
   },
   {
     "original": "이해인",
-    "source": "translate_failed"
+    "qid": "Q56395263",
+    "ja": "イ・ヘイン",
+    "ko": "이해인",
+    "en": "Lee Hae-in",
+    "zh": "李海仁",
+    "es": "Lee Hae-in",
+    "source": "wikidata"
   },
   {
     "original": "법륜",
-    "source": "translate_failed"
+    "qid": "Q16180430",
+    "ja": "法輪",
+    "ko": "법륜",
+    "en": "Pomnyun",
+    "zh": "法輪師父",
+    "es": "Pomnyun",
+    "source": "wikidata"
   },
   {
     "original": "멜 로빈스",
@@ -83,7 +114,14 @@
   },
   {
     "original": "존 윌리엄스",
-    "source": "translate_failed"
+    "qid": "Q131285",
+    "ja": "ジョン・ウィリアムズ",
+    "ko": "존 윌리엄스",
+    "en": "John Williams",
+    "zh": "約翰·威廉斯",
+    "fr": "John Williams",
+    "es": "John Williams",
+    "source": "wikidata"
   },
   {
     "original": "김도형(별별역사)",
@@ -91,6 +129,10 @@
   },
   {
     "original": "최태성",
-    "source": "translate_failed"
+    "qid": "Q22975112",
+    "ja": "崔兌誠",
+    "ko": "최태성",
+    "zh": "崔兌誠",
+    "source": "wikidata"
   }
 ]

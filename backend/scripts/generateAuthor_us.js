@@ -6,11 +6,30 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function detectSearchLang(author) {
-  if (/[\u3040-\u30ff]/.test(author)) return 'ja';
-  if (/[\u4e00-\u9fff]/.test(author)) return 'zh';
-  if (/[\uac00-\ud7af]/.test(author)) return 'ko';
-  return 'en';
+// 재시도 로직 추가
+async function fetchWithRetry(url, retries = 3, delay = 2000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url);
+
+      // Rate limit 체크
+      if (res.status === 429) {
+        console.warn(`⏳ Rate limit hit, waiting ${delay * (i + 1)}ms...`);
+        await sleep(delay * (i + 1));
+        continue;
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      return await res.json();
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      console.warn(`⚠️ Retry ${i + 1}/${retries}:`, e.message);
+      await sleep(delay * (i + 1));
+    }
+  }
 }
 
 async function searchWikidata(name) {
@@ -21,7 +40,7 @@ async function searchWikidata(name) {
     `&language=${lang}` +
     `&limit=5&format=json`;
 
-  const res = await fetch(searchUrl).then(r => r.json());
+  const res = await fetchWithRetry(searchUrl);
   if (!res.search || res.search.length === 0) return null;
   return res.search.map(r => r.id);
 }
@@ -32,7 +51,7 @@ async function isHuman(qid) {
     `&ids=${qid}` +
     `&props=claims&format=json`;
 
-  const res = await fetch(url).then(r => r.json());
+  const res = await fetchWithRetry(url);
   const claims = res.entities[qid]?.claims;
   return claims?.P31?.some(c => c.mainsnak.datavalue?.value.id === 'Q5');
 }
@@ -45,7 +64,7 @@ async function getWikidataLabels(qid) {
     `&languages=ja|ko|en|zh|zh-hans|zh-hant|fr|es` +
     `&format=json`;
 
-  const res = await fetch(entityUrl).then(r => r.json());
+  const res = await fetchWithRetry(entityUrl);
   const labels = res.entities[qid]?.labels;
 
   if (!labels) return null;
@@ -68,6 +87,7 @@ async function normalizeAuthor(author, fallbackLang) {
     const qids = await searchWikidata(author);
     if (qids) {
       for (const qid of qids) {
+        await sleep(500); // 각 QID 체크 사이에 딜레이 추가
         if (await isHuman(qid)) {
           const wiki = await getWikidataLabels(qid);
           if (wiki) {
@@ -77,7 +97,7 @@ async function normalizeAuthor(author, fallbackLang) {
       }
     }
   } catch (e) {
-    console.warn('⚠ Wikidata 실패:', author);
+    console.warn('⚠ Wikidata 실패:', author, e.message);
   }
 
   if (fallbackLang) {
@@ -119,14 +139,14 @@ async function processUSAuthors() {
   const results = [];
 
   for (const author of authors) {
-    const normalized = await normalizeAuthor(author, null); // 영어는 번역 안 함
+    const normalized = await normalizeAuthor(author, null);
     results.push(normalized);
     console.log(`✔ ${author} → ${normalized.source}`);
-    await sleep(1200);
-  }
+    await sleep(2500);
 
-  fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
-  console.log(`✅ 저장 완료: ${outputFile}`);
+    fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
+    console.log(`✅ 저장 완료: ${outputFile}`);
+  }
 }
 
 processUSAuthors();

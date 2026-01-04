@@ -83,7 +83,7 @@ const COUNTRY_CONFIG = {
   },
   ES: {
     apiEndpoint: 'es-book-detail',
-    storeName: 'elcorteingles',
+    storeName: 'Store',
     defaultAuthorText: 'is a renowned writer known for their insightful works',
   },
 };
@@ -92,7 +92,7 @@ export default function BookDetail({ route, navigation }) {
   const { book, language: languageFromRoute } = route.params || {};
 
   // 제목을 콜론으로 분리하는 함수
-  const splitTitle = (title) => {
+  const splitTitle = title => {
     if (!title) return { mainTitle: '', subtitle: '', fullTitle: '' };
     const colonIndex = title.indexOf(':');
     if (colonIndex === -1) {
@@ -101,7 +101,7 @@ export default function BookDetail({ route, navigation }) {
     return {
       mainTitle: title.substring(0, colonIndex).trim(),
       subtitle: title.substring(colonIndex + 1).trim(),
-      fullTitle: title
+      fullTitle: title,
     };
   };
 
@@ -122,11 +122,11 @@ export default function BookDetail({ route, navigation }) {
   const [imageLoadError, setImageLoadError] = useState(false);
 
   // 이미지 URL을 고해상도로 변환하고 정리하는 함수
-  const getHighResImageUrl = (imageUrl) => {
+  const getHighResImageUrl = imageUrl => {
     if (!imageUrl || !imageUrl.trim()) return imageUrl;
-    
+
     let cleanedUrl = imageUrl.trim();
-    
+
     // Amazon 이미지 URL의 잘못된 형식 수정
     // 예: _AC_UL600_SR600,400_ -> _AC_SL1500_ (고해상도)
     // 예: _AC_UL320_ -> _AC_SL1500_
@@ -137,7 +137,7 @@ export default function BookDetail({ route, navigation }) {
     cleanedUrl = cleanedUrl.replace(/_AC_SR\d+,\d+_/g, '_AC_SL1500_');
     // 기존 크기 제한을 더 큰 크기로 변경 (하지만 원본이 더 나을 수 있으므로 주의)
     // cleanedUrl = cleanedUrl.replace(/_SL\d+_/g, '_SL1500_');
-    
+
     // 이미지 URL에서 쿼리 파라미터나 크기 제한을 제거하여 원본 이미지 사용
     // 일부 이미지 서비스는 URL 파라미터로 크기를 제한하므로 이를 제거
     try {
@@ -156,7 +156,10 @@ export default function BookDetail({ route, navigation }) {
       return url.toString();
     } catch (e) {
       // URL 파싱 실패 시 원본 URL 반환
-      console.warn('[BookDetail] URL parsing failed, using original:', imageUrl);
+      console.warn(
+        '[BookDetail] URL parsing failed, using original:',
+        imageUrl,
+      );
       return imageUrl;
     }
   };
@@ -258,6 +261,29 @@ export default function BookDetail({ route, navigation }) {
       return;
     }
 
+    // Wikidata 여부 먼저 확인 - book.author 사용 (원본 이름)
+    const authorData = authorDataMap[country];
+    if (!authorData) {
+      console.log(`⚠️ No author data for country: ${country}`);
+      return;
+    }
+
+    // 원본 작가 이름으로 검색 (book.author 사용)
+    const authorInfo = authorData.find(a => a.original === book.author);
+
+    if (!authorInfo) {
+      console.log(`⚠️ Author not found in data: ${book.author}`);
+      return;
+    }
+
+    // source가 'wikidata'인 경우만 모달 열기
+    if (authorInfo.source !== 'wikidata') {
+      console.log(`⚠️ Author source is not wikidata: ${authorInfo.source}`);
+      return; // 여기서 종료 - 모달 안 열림
+    }
+
+    console.log('✅ Author has wikidata, opening modal');
+
     // 1. 원어 상태일 때: 책의 국가 Wikipedia + 원어 이름
     if (language === 'original') {
       const countryWikiLang =
@@ -276,12 +302,9 @@ export default function BookDetail({ route, navigation }) {
         book.author,
       )}`;
 
-      console.log(
-        '🔍 [Original] Searching:',
-        book.author,
-        'on',
-        `${countryWikiLang}.wikipedia.org`,
-      );
+      console.log('📍 Full URL:', url); // ✅ URL 확인
+      console.log('📍 book.author value:', book.author); // ✅ 작가 이름 확인
+      console.log('📍 Encoded:', encodeURIComponent(book.author)); // ✅ 인코딩된 값 확인
 
       setWikiUrl(url);
       setWikiType('author');
@@ -289,7 +312,7 @@ export default function BookDetail({ route, navigation }) {
       return;
     }
 
-    // 2. 번역 상태일 때: 앱 언어 Wikipedia + 번역된 이름 (Wikidata 있을 때만)
+    // 2. 번역 상태일 때: 앱 언어 Wikipedia + 번역된 이름
     const wikiLang = getWikiLangByAppLanguage();
 
     const targetLangKey =
@@ -302,17 +325,9 @@ export default function BookDetail({ route, navigation }) {
         en: 'en',
       }[wikiLang] || 'en';
 
-    const { name: translatedName, hasWikidata } = getAuthorTranslatedName(
-      book.author,
-      country,
-      targetLangKey,
-    );
-
-    // Wikidata에 없으면 검색 안 함
-    if (!hasWikidata) {
-      console.log(`⚠️ [Translated] Author not in Wikidata: ${book.author}`);
-      return;
-    }
+    // 번역된 이름 가져오기
+    const translatedName =
+      authorInfo[targetLangKey] || authorInfo.en || authorInfo.original;
 
     const url = `https://${wikiLang}.wikipedia.org/wiki/${encodeURIComponent(
       translatedName,
@@ -387,7 +402,7 @@ export default function BookDetail({ route, navigation }) {
       };
       return fallbacks[key] || key;
     }
-    
+
     const translation = translationsData.bookDetail[key];
     // userLanguage: 0=Korean, 1=English, 2=Japanese, 3=Chinese, 4=Traditional Chinese, 5=French, 6=Spanish
     return translation[userLanguage] || translation['1'] || key;
@@ -408,7 +423,7 @@ export default function BookDetail({ route, navigation }) {
   };
 
   // 내용이 비어있거나 유효하지 않은지 확인하는 함수
-  const isEmptyContent = (content) => {
+  const isEmptyContent = content => {
     if (!content) return true;
     const trimmed = content.trim();
     return trimmed === '' || trimmed.length === 0;
@@ -423,28 +438,39 @@ export default function BookDetail({ route, navigation }) {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'author': {
-        const authorContent = language === 'korean' && details?.authorInfo_kr
-          ? details.authorInfo_kr
-          : details?.authorInfo;
-        
-        // About Book이나 More Info와 내용이 같은지 확인
-        // G행: 도서정보 (description)
-        const aboutBookContentForAuthor = language === 'korean' && details?.description_kr
-          ? details.description_kr
-          : details?.description || details?.tableOfContents || details?.plot || details?.contents;
-        // H행: 상세정보 (moreInfo)
-        const moreInfoContentForAuthor = language === 'korean' && details?.moreInfo_kr
-          ? details.moreInfo_kr
-          : details?.moreInfo || details?.publisherReview || details?.review;
+        const authorContent =
+          language === 'korean' && details?.authorInfo_kr
+            ? details.authorInfo_kr
+            : details?.authorInfo;
 
-        const isAuthorSameAsAboutBook = isSameContent(authorContent, aboutBookContentForAuthor);
-        const isAuthorSameAsMoreInfo = isSameContent(authorContent, moreInfoContentForAuthor);
+        // About Book이나 More Info와 내용이 같은지 확인
+        const aboutBookContentForAuthor =
+          language === 'korean' && details?.description_kr
+            ? details.description_kr
+            : details?.description ||
+              details?.tableOfContents ||
+              details?.plot ||
+              details?.contents;
+        const moreInfoContentForAuthor =
+          language === 'korean' && details?.moreInfo_kr
+            ? details.moreInfo_kr
+            : details?.moreInfo || details?.publisherReview || details?.review;
+
+        const isAuthorSameAsAboutBook = isSameContent(
+          authorContent,
+          aboutBookContentForAuthor,
+        );
+        const isAuthorSameAsMoreInfo = isSameContent(
+          authorContent,
+          moreInfoContentForAuthor,
+        );
 
         return (
           <View style={styles.tabContent}>
             <Text style={styles.tabContentTitle}>{getTabTitle('author')}</Text>
             <Text style={styles.tabContentText}>
-              {isEmptyContent(authorContent) || (isAuthorSameAsAboutBook && isAuthorSameAsMoreInfo)
+              {isEmptyContent(authorContent) ||
+              (isAuthorSameAsAboutBook && isAuthorSameAsMoreInfo)
                 ? getTranslation('noInformation')
                 : authorContent || getTranslation('noInformation')}
             </Text>
@@ -452,24 +478,35 @@ export default function BookDetail({ route, navigation }) {
         );
       }
       case 'aboutBook': {
-        // G행: 도서정보 (description) - 구글 시트 G 컬럼
-        const aboutBookContent_kr = language === 'korean' && details?.description_kr
-          ? details.description_kr
-          : null;
-        const aboutBookContent_en = details?.description || details?.tableOfContents || details?.plot || details?.contents;
+        const aboutBookContent_kr =
+          language === 'korean' && details?.description_kr
+            ? details.description_kr
+            : null;
+        const aboutBookContent_en =
+          details?.description ||
+          details?.tableOfContents ||
+          details?.plot ||
+          details?.contents;
         const aboutBookContent = aboutBookContent_kr || aboutBookContent_en;
 
         // Author나 More Info와 내용이 같은지 확인
-        const authorContentForAboutBook = language === 'korean' && details?.authorInfo_kr
-          ? details.authorInfo_kr
-          : details?.authorInfo;
-        // H행: 상세정보 (moreInfo) - 구글 시트 H 컬럼만 사용
-        const moreInfoContentForAboutBook = language === 'korean' && details?.moreInfo_kr
-          ? details.moreInfo_kr
-          : details?.moreInfo || details?.publisherReview || details?.review;
+        const authorContentForAboutBook =
+          language === 'korean' && details?.authorInfo_kr
+            ? details.authorInfo_kr
+            : details?.authorInfo;
+        const moreInfoContentForAboutBook =
+          language === 'korean' && details?.moreInfo_kr
+            ? details.moreInfo_kr
+            : details?.moreInfo || details?.publisherReview || details?.review;
 
-        const isAboutBookSameAsAuthor = isSameContent(aboutBookContent, authorContentForAboutBook);
-        const isAboutBookSameAsMoreInfo = isSameContent(aboutBookContent, moreInfoContentForAboutBook);
+        const isAboutBookSameAsAuthor = isSameContent(
+          aboutBookContent,
+          authorContentForAboutBook,
+        );
+        const isAboutBookSameAsMoreInfo = isSameContent(
+          aboutBookContent,
+          moreInfoContentForAboutBook,
+        );
 
         return (
           <View style={styles.tabContent}>
@@ -478,19 +515,16 @@ export default function BookDetail({ route, navigation }) {
             </Text>
             {/* 전체 제목(부제목 포함) 표시 */}
             {titleParts.fullTitle && titleParts.subtitle && (
-              <Text style={styles.fullTitleText}>
-                {titleParts.fullTitle}
-              </Text>
+              <Text style={styles.fullTitleText}>{titleParts.fullTitle}</Text>
             )}
-            {isEmptyContent(aboutBookContent) || (isAboutBookSameAsAuthor && isAboutBookSameAsMoreInfo) ? (
+            {isEmptyContent(aboutBookContent) ||
+            (isAboutBookSameAsAuthor && isAboutBookSameAsMoreInfo) ? (
               <Text style={styles.tabContentText}>
                 {getTranslation('noInformation')}
               </Text>
             ) : (
               <View>
-                <Text style={styles.tabContentText}>
-                  {aboutBookContent}
-                </Text>
+                <Text style={styles.tabContentText}>{aboutBookContent}</Text>
                 {(details?.publisher || book.publisher) && (
                   <View style={styles.infoSection}>
                     <Text style={styles.tabContentSubtitle}>
@@ -512,25 +546,34 @@ export default function BookDetail({ route, navigation }) {
         );
       }
       case 'moreInfo': {
-        // H행: 상세정보 (moreInfo) - 구글 시트 H 컬럼
-        const moreInfoContent_kr = language === 'korean' && details?.moreInfo_kr
-          ? details.moreInfo_kr
-          : null;
-        // G행(description)과 중복되지 않도록 moreInfo, publisherReview, review만 사용
-        const moreInfoContent_en = details?.moreInfo || details?.publisherReview || details?.review;
+        const moreInfoContent_kr =
+          language === 'korean' && details?.moreInfo_kr
+            ? details.moreInfo_kr
+            : null;
+        const moreInfoContent_en =
+          details?.moreInfo || details?.publisherReview || details?.review;
         const moreInfoContent = moreInfoContent_kr || moreInfoContent_en;
 
-        // Author나 About Book과 내용이 같은지 확인
-        const authorContentForMoreInfo = language === 'korean' && details?.authorInfo_kr
-          ? details.authorInfo_kr
-          : details?.authorInfo;
-        // G행: 도서정보 (description) - 구글 시트 G 컬럼만 사용
-        const aboutBookContentForMoreInfo = language === 'korean' && details?.description_kr
-          ? details.description_kr
-          : details?.description || details?.tableOfContents || details?.plot || details?.contents;
+        const authorContentForMoreInfo =
+          language === 'korean' && details?.authorInfo_kr
+            ? details.authorInfo_kr
+            : details?.authorInfo;
+        const aboutBookContentForMoreInfo =
+          language === 'korean' && details?.description_kr
+            ? details.description_kr
+            : details?.description ||
+              details?.tableOfContents ||
+              details?.plot ||
+              details?.contents;
 
-        const isMoreInfoSameAsAuthor = isSameContent(moreInfoContent, authorContentForMoreInfo);
-        const isMoreInfoSameAsAboutBook = isSameContent(moreInfoContent, aboutBookContentForMoreInfo);
+        const isMoreInfoSameAsAuthor = isSameContent(
+          moreInfoContent,
+          authorContentForMoreInfo,
+        );
+        const isMoreInfoSameAsAboutBook = isSameContent(
+          moreInfoContent,
+          aboutBookContentForMoreInfo,
+        );
 
         return (
           <View style={styles.tabContent}>
@@ -538,7 +581,8 @@ export default function BookDetail({ route, navigation }) {
               {getTabTitle('moreInfo')}
             </Text>
             <Text style={styles.tabContentText}>
-              {isEmptyContent(moreInfoContent) || (isMoreInfoSameAsAuthor && isMoreInfoSameAsAboutBook)
+              {isEmptyContent(moreInfoContent) ||
+              (isMoreInfoSameAsAuthor && isMoreInfoSameAsAboutBook)
                 ? getTranslation('noInformation')
                 : moreInfoContent || getTranslation('noInformation')}
             </Text>
@@ -602,8 +646,11 @@ export default function BookDetail({ route, navigation }) {
                   <Image
                     source={{ uri: book.image }}
                     style={styles.bookImage}
-                    onError={(error) => {
-                      console.error('[BookDetail] Image load error:', error.nativeEvent?.error);
+                    onError={error => {
+                      console.error(
+                        '[BookDetail] Image load error:',
+                        error.nativeEvent?.error,
+                      );
                       console.error('[BookDetail] Image URL:', book.image);
                       setImageLoadError(true);
                     }}
@@ -613,7 +660,13 @@ export default function BookDetail({ route, navigation }) {
                     }}
                   />
                   {imageLoadError && (
-                    <View style={[styles.bookImage, styles.imagePlaceholder, { position: 'absolute', top: 0, left: 0 }]}>
+                    <View
+                      style={[
+                        styles.bookImage,
+                        styles.imagePlaceholder,
+                        { position: 'absolute', top: 0, left: 0 },
+                      ]}
+                    >
                       <Text style={styles.placeholderText}>No Image</Text>
                     </View>
                   )}
@@ -653,8 +706,8 @@ export default function BookDetail({ route, navigation }) {
               {/* 제목 - 순위 포함, 콜론 앞부분만 표시 */}
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>
-                  {book.rank 
-                    ? `#${book.rank}: ${titleParts.mainTitle}` 
+                  {book.rank
+                    ? `#${book.rank}: ${titleParts.mainTitle}`
                     : titleParts.mainTitle}
                 </Text>
               </View>
@@ -786,27 +839,6 @@ export default function BookDetail({ route, navigation }) {
                 source={{ uri: wikiUrl }}
                 style={styles.webView}
                 startInLoadingState={true}
-                onError={syntheticEvent => {
-                  const { nativeEvent } = syntheticEvent;
-                  console.warn('WebView error:', nativeEvent);
-                  setTimeout(() => {
-                    setWikiModalVisible(false);
-                  }, 1000);
-                }}
-                onHttpError={syntheticEvent => {
-                  const { nativeEvent } = syntheticEvent;
-                  if (nativeEvent.statusCode === 404) {
-                    console.warn('Page not found');
-                    setTimeout(() => {
-                      setWikiModalVisible(false);
-                    }, 1000);
-                  }
-                }}
-                onMessage={event => {
-                  if (event.nativeEvent.data === 'PAGE_NOT_FOUND') {
-                    setWikiModalVisible(false);
-                  }
-                }}
                 renderLoading={() => (
                   <View style={styles.webViewLoading}>
                     <ActivityIndicator size="large" color="#4285F4" />
@@ -814,18 +846,6 @@ export default function BookDetail({ route, navigation }) {
                 )}
                 injectedJavaScript={`
     (function() {
-      const adHtml = '<div style="width: 100%; height: 50px; background-color: #FFF9E6; display: flex; justify-content: center; align-items: center; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; position: sticky; top: 0; z-index: 9999;"><span style="color: #999; font-size: 14px; font-weight: 500;">Banner Ad</span></div>';
-      
-      function insertAd() {
-        const content = document.querySelector('#content') || document.querySelector('.mw-parser-output') || document.querySelector('body');
-        if (content && !document.querySelector('#custom-ad')) {
-          const adDiv = document.createElement('div');
-          adDiv.id = 'custom-ad';
-          adDiv.innerHTML = adHtml;
-          content.insertBefore(adDiv, content.firstChild);
-        }
-      }
-      
       function checkPageNotFound() {
         const bodyText = document.body.innerText || document.body.textContent;
         const notFoundPatterns = [
@@ -892,14 +912,17 @@ export default function BookDetail({ route, navigation }) {
             >
               {book.image && book.image.trim() ? (
                 <Image
-                  source={{ 
+                  source={{
                     uri: book.image,
-                    cache: 'force-cache'
+                    cache: 'force-cache',
                   }}
                   style={styles.imageModalImage}
                   resizeMode="contain"
                   onError={() => {
-                    console.error('[BookDetail] Modal image load error:', book.image);
+                    console.error(
+                      '[BookDetail] Modal image load error:',
+                      book.image,
+                    );
                     setImageModalVisible(false);
                   }}
                 />

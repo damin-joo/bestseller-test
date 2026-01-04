@@ -1,29 +1,14 @@
 [
   {
-    "original": "Charlie Kirk",
-    "qid": "Q30121972",
-    "ja": "チャーリー・カーク",
-    "ko": "찰리 커크",
-    "en": "Charlie Kirk",
-    "zh": "查理·柯克",
-    "fr": "Charlie Kirk",
-    "es": "Charlie Kirk",
-    "source": "wikidata"
-  },
-  {
     "original": "Emma Greene",
     "qid": "Q75998972",
     "en": "Emma Rhodes",
-    "source": "wikidata"
+    "source": "wikidata_not_found"
   },
   {
-    "original": "Snoop Dogg",
-    "qid": "Q6096",
-    "ja": "スヌープ・ドッグ",
-    "ko": "스눕 독",
-    "zh": "史努比狗狗",
-    "fr": "Snoop Dogg",
-    "es": "Snoop Dogg",
+    "original": "Jack Haynes",
+    "qid": "Q75386283",
+    "en": "Jack Cresswell Haynes",
     "source": "wikidata"
   },
   {
@@ -37,6 +22,37 @@
     "source": "wikidata"
   },
   {
+    "original": "Jeffrey Mason",
+    "qid": "Q107106706",
+    "en": "Jeffrey Mason",
+    "source": "wikidata"
+  },
+  {
+    "original": "Bill O'Neill",
+    "qid": "Q109282876",
+    "en": "Bill O'Neill",
+    "source": "wikidata"
+  },
+  {
+    "original": "Carole P. Roman",
+    "source": "wikidata_not_found"
+  },
+  {
+    "original": "PI Kids",
+    "source": "wikidata_not_found"
+  },
+  {
+    "original": "Freida McFadden",
+    "qid": "Q121304449",
+    "en": "Freida McFadden",
+    "fr": "Freida McFadden",
+    "source": "wikidata"
+  },
+  {
+    "original": "Stephen J. Ellis",
+    "source": "wikidata_not_found"
+  },
+  {
     "original": "Dav Pilkey",
     "qid": "Q2550486",
     "ja": "デイブ・ピルキー",
@@ -47,63 +63,56 @@
     "source": "wikidata"
   },
   {
-    "original": "Jeff Kinney",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "Publications International Ltd.",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "PI Kids",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "Jack Haynes",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "Stephen J. Ellis",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "Carole P. Roman",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "John Grisham",
-    "source": "wikidata_not_found"
-  },
-  {
     "original": "Running Press",
     "source": "wikidata_not_found"
   },
   {
-    "original": "Dr. Nicole Apelian",
+    "original": "G T Karber",
     "source": "wikidata_not_found"
   },
   {
-    "original": "Sophia Elizabeth",
+    "original": "Wonder House Books",
     "source": "wikidata_not_found"
   },
   {
-    "original": "Bill O'Neill",
+    "original": "Andrew Ross Sorkin",
+    "qid": "Q506972",
+    "ja": "アンドリュー・ロス・ソーキン",
+    "ko": "앤드루 R. 소킨",
+    "en": "Andrew Ross Sorkin",
+    "zh": "安德魯·羅斯·索爾金",
+    "fr": "Andrew Ross Sorkin",
+    "es": "Andrew Ross Sorkin",
+    "source": "wikidata"
+  },
+  {
+    "original": "Pixel Panda",
     "source": "wikidata_not_found"
   },
   {
-    "original": "Shane Carley",
-    "source": "wikidata_not_found"
+    "original": "Jeff Kinney",
+    "qid": "Q311704",
+    "ja": "ジェフ・キニー",
+    "ko": "제프 키니",
+    "zh": "杰夫·金尼",
+    "fr": "Jeff Kinney",
+    "es": "Jeff Kinney",
+    "source": "wikidata"
   },
   {
-    "original": "John Kennedy",
-    "source": "wikidata_not_found"
+    "original": "Snoop Dogg",
+    "qid": "Q6096",
+    "ja": "スヌープ・ドッグ",
+    "ko": "스눕 독",
+    "zh": "史努比狗狗",
+    "fr": "Snoop Dogg",
+    "es": "Snoop Dogg",
+    "source": "wikidata"
   },
   {
-    "original": "Conor Riordan",
-    "source": "wikidata_not_found"
-  },
-  {
-    "original": "Dr. Marc Siegel",
-    "source": "wikidata_not_found"
+    "original": "Allen Levi",
+    "qid": "Q87851092",
+    "en": "Allen S Levine",
+    "source": "wikidata"
   }
 ]

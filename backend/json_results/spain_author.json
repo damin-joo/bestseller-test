@@ -54,7 +54,11 @@
   },
   {
     "original": "Keri Smith",
-    "source": "translate_failed"
+    "qid": "Q438720",
+    "en": "Keri Smith",
+    "fr": "Keri Smith",
+    "es": "Keri Smith",
+    "source": "wikidata"
   },
   {
     "original": "Arthur Perrier",
@@ -62,27 +66,57 @@
   },
   {
     "original": "Dav Pilkey",
-    "source": "translate_failed"
+    "qid": "Q2550486",
+    "ja": "デイブ・ピルキー",
+    "en": "Dav Pilkey",
+    "zh": "戴夫·皮尔奇",
+    "fr": "Dav Pilkey",
+    "es": "Dav Pilkey",
+    "source": "wikidata"
   },
   {
     "original": "Santiago Posteguillo",
-    "source": "translate_failed"
+    "qid": "Q6121095",
+    "ja": "サンティアゴ・ポステギーリョ",
+    "ko": "산티아고 포스테기요",
+    "en": "Santiago Posteguillo",
+    "fr": "Santiago Posteguillo",
+    "es": "Santiago Posteguillo",
+    "source": "wikidata"
   },
   {
     "original": "Ken Follett",
-    "source": "translate_failed"
+    "qid": "Q210669",
+    "ja": "ケン・フォレット",
+    "ko": "켄 폴릿",
+    "en": "Ken Follett",
+    "zh": "肯·福勒特",
+    "fr": "Ken Follett",
+    "es": "Ken Follett",
+    "source": "wikidata"
   },
   {
     "original": "José María Zavala",
-    "source": "translate_failed"
+    "qid": "Q5943699",
+    "en": "José María Zavala",
+    "fr": "José María Zavala",
+    "es": "José María Zavala",
+    "source": "wikidata"
   },
   {
     "original": "David Uclés",
-    "source": "translate_failed"
+    "qid": "Q131147685",
+    "en": "David Uclés",
+    "fr": "David Uclés",
+    "es": "David Uclés",
+    "source": "wikidata"
   },
   {
     "original": "Ana Serna",
-    "source": "translate_failed"
+    "qid": "Q63927839",
+    "en": "Ana Serna",
+    "es": "Ana Serna",
+    "source": "wikidata"
   },
   {
     "original": "Elma van Vliet",
@@ -94,7 +128,11 @@
   },
   {
     "original": "Javier Castillo",
-    "source": "translate_failed"
+    "qid": "Q29035403",
+    "en": "Javier Castillo",
+    "fr": "Javier Castillo",
+    "es": "Javier Castillo",
+    "source": "wikidata"
   },
   {
     "original": "Vincent Van Proot",
@@ -106,15 +144,26 @@
   },
   {
     "original": "Ángela Banzas",
-    "source": "translate_failed"
+    "qid": "Q122704600",
+    "en": "Ángela Banzas",
+    "es": "Ángela Banzas",
+    "source": "wikidata"
   },
   {
     "original": "J.K. Rowling",
-    "source": "translate_failed"
+    "qid": "Q34660",
+    "ja": "J・K・ローリング",
+    "ko": "J. K. 롤링",
+    "zh": "喬安娜·凱薩琳·羅琳",
+    "source": "wikidata"
   },
   {
     "original": "Mikel Santiago",
-    "source": "translate_failed"
+    "qid": "Q23705326",
+    "en": "Mikel Santiago",
+    "fr": "Mikel Santiago",
+    "es": "Mikel Santiago",
+    "source": "wikidata"
   },
   {
     "original": "Papeterie Bleu",
@@ -122,7 +171,11 @@
   },
   {
     "original": "Eloy Moreno",
-    "source": "translate_failed"
+    "qid": "Q101541578",
+    "en": "Eloy Moreno",
+    "fr": "Eloy Moreno",
+    "es": "Eloy Moreno",
+    "source": "wikidata"
   },
   {
     "original": "Oliva Hernández Pantoja",
@@ -134,7 +187,14 @@
   },
   {
     "original": "Arturo Pérez-Reverte",
-    "source": "translate_failed"
+    "qid": "Q155106",
+    "ja": "アルトゥーロ・ペレス＝レベルテ",
+    "ko": "아르투로 페레스 레베르테",
+    "en": "Arturo Pérez-Reverte",
+    "zh": "阿圖洛·貝雷茲-雷維特",
+    "fr": "Arturo Pérez-Reverte",
+    "es": "Arturo Pérez-Reverte",
+    "source": "wikidata"
   },
   {
     "original": "Luca Martin",
