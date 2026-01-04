@@ -53,8 +53,8 @@ jobs:
             echo "AUTHOR=backend/scripts/generateAuthor_taiwan.js" >> $GITHUB_OUTPUT
           fi
           if [ "$DAY" -eq 7 ]; then 
-            echo "SCRAPER=backend/scrappers/franceScrapper.js" >> $GITHUB_OUTPUT
-            echo "AUTHOR=backend/scripts/generateAuthor_france.js" >> $GITHUB_OUTPUT
+            echo "SCRAPER=backend/scrappers/franceScrapper.js backend/scrappers/spainScrapper.js">> $GITHUB_OUTPUT
+            echo "AUTHOR=backend/scripts/generateAuthor_france.js backend/scripts/generateAuthor_spain.js" >> $GITHUB_OUTPUT
           fi
 
       - name: Run the day-specific script

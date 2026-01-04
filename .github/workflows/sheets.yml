@@ -46,7 +46,7 @@ jobs:
             echo "SCRAPER=backend/scrappers/taiwanScrapper.js" >> $GITHUB_OUTPUT
           fi
           if [ "$DAY" -eq 7 ]; then
-            echo "SCRAPER=backend/scrappers/franceScrapper.js" >> $GITHUB_OUTPUT
+            echo "SCRAPER=backend/scrappers/franceScrapper.js backend/scrappers/spainScrapper.js" >> $GITHUB_OUTPUT
           fi
 
       - name: Run the day-specific scraper
