@@ -19,9 +19,15 @@ import LoadingScreen from './LoadingScreen';
 import { useBookmark } from './BookmarkContext';
 import { useLanguage } from './LanguageContext';
 import { useTheme } from './ThemeContext';
-import { BannerAdSize, RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAdSize, InterstitialAd, AdEventType, RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
 import MyAds from './BannerAd';
 import translationsData from './assets/translations.json';
+
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3940256099942544/1033173712';
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+  requestNonPersonalizedAdsOnly: true,
+});
 
 const rewardedAdUnitId = __DEV__ ? TestIds.REWARDED : 'ca-app-pub-3940256099942544/5224354917';
 
@@ -78,9 +84,8 @@ const COUNTRY_INDEX_TO_LABEL_COLUMN = {
 };
 
 export default function MainScreen({ navigation }) {
-  console.log('[MainScreen] ===== MainScreen component rendering =====');
-  
   const [activeTab, setActiveTab] = useState('home');
+  const [loaded, setLoaded] = useState(false);
   const [rewardedLoaded, setRewardedLoaded] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
   const [pendingLanguageChange, setPendingLanguageChange] = useState(null);
@@ -110,7 +115,6 @@ export default function MainScreen({ navigation }) {
 
   // 앱 시작 시 오래된 캐시 정리 (AsyncStorage 공간 확보)
   useEffect(() => {
-<<<<<<< HEAD
     const cleanupOldCache = async () => {
       try {
         console.log('[MainScreen] Starting aggressive cache cleanup...');
@@ -177,75 +181,8 @@ export default function MainScreen({ navigation }) {
     cleanupOldCache();
   }, []);
 
-  // 리워드 광고 로드
+  // 인터스티셜 광고 로드
   useEffect(() => {
-    console.log('[MainScreen] ===== useEffect: Component mounted, initializing rewarded ad =====');
-    console.log('[MainScreen] Rewarded ad unit ID:', rewardedAdUnitId);
-    console.log('[MainScreen] Is DEV mode:', __DEV__);
-    
-    // 광고 로드 시작
-    rewarded.load();
-    console.log('[MainScreen] Called rewarded.load()');
-    
-    const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-      console.log('[MainScreen] ===== Rewarded ad loaded successfully =====');
-      setRewardedLoaded(true);
-    });
-
-    const unsubscribeEarned = rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, async (reward) => {
-      console.log('[MainScreen] User earned reward:', reward);
-      setRewardEarned(true);
-      
-      // 광고 시청 시간 저장
-      const watchedTimestamp = Date.now();
-      console.log('[MainScreen] Saving watched timestamp:', watchedTimestamp, new Date(watchedTimestamp).toLocaleString());
-      
-      // 메모리에 먼저 저장 (AsyncStorage 실패 시 대비)
-      watchedTimestampRef.current = watchedTimestamp;
-      
-      // AsyncStorage에 저장 시도
-      try {
-        await AsyncStorage.setItem(REWARD_AD_WATCHED_KEY, watchedTimestamp.toString());
-        console.log('[MainScreen] Successfully saved timestamp to AsyncStorage');
-        
-        // 저장 확인
-        const saved = await AsyncStorage.getItem(REWARD_AD_WATCHED_KEY);
-        console.log('[MainScreen] Verified saved timestamp:', saved);
-      } catch (storageError) {
-        console.error('[MainScreen] Failed to save timestamp to AsyncStorage:', storageError);
-        console.log('[MainScreen] Using memory backup instead');
-        // AsyncStorage 저장 실패해도 메모리에 저장되어 있으므로 계속 진행
-      }
-      
-      // 언어 변경 적용
-      if (pendingLanguageChange !== null) {
-        setLanguage(pendingLanguageChange);
-        setPendingLanguageChange(null);
-      }
-    });
-
-    const unsubscribeClosed = rewarded.addAdEventListener(RewardedAdEventType.CLOSED, () => {
-      console.log('[MainScreen] ===== Rewarded ad closed =====');
-      setRewardedLoaded(false);
-      console.log('[MainScreen] Reloading rewarded ad after close...');
-      rewarded.load();
-      setShowAdModal(false);
-      
-      // 리워드를 받지 않고 닫은 경우에만 언어 변경 취소
-      if (!rewardEarned && pendingLanguageChange !== null) {
-        console.log('[MainScreen] Ad closed without reward, canceling language change');
-        setPendingLanguageChange(null);
-      }
-      
-      // 리워드 상태 리셋
-      setRewardEarned(false);
-    });
-
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-      unsubscribeClosed();
-=======
     let unsubscribeLoaded;
     let unsubscribeClosed;
     let unsubscribeError;
@@ -285,7 +222,6 @@ export default function MainScreen({ navigation }) {
       } catch (error) {
         console.error('[MainScreen] Error cleaning up ad listeners:', error);
       }
->>>>>>> mary-update4
     };
   }, []);
 
