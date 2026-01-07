@@ -22,10 +22,6 @@ jobs:
         working-directory: backend
         run: npm ci
 
-      - name: Write Google service account key
-        run: |
-          echo '${{ secrets.GCP_SA_KEY }}' > sa.json
-
       - name: Determine script to run
         id: pick
         run: |
@@ -56,10 +52,11 @@ jobs:
           esac
 
           echo "SCRIPTS=$SCRIPTS" >> $GITHUB_OUTPUT
+          echo "Running scripts: $SCRIPTS"
 
       - name: Run the day-specific scraper(s)
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: sa.json
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
         run: |
           for script in ${{ steps.pick.outputs.SCRIPTS }}; do
             node $script
@@ -67,5 +64,5 @@ jobs:
 
       - name: Upload results to Google
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: sa.json
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
         run: node backend/uploadToGoogle.js
