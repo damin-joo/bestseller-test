@@ -28,13 +28,20 @@ jobs:
           DAY=$(TZ="Asia/Seoul" date +%u)
 
           case "$DAY" in
-            1)SCRIPTS="backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js";;
-            2)SCRIPTS="backend/scrappers/japanScrapper.js";;
-            3)SCRIPTS="backend/scrappers/ukScrapper.js";;
-            4)SCRIPTS="backend/scrappers/spainScrapper.js";;
+            # 1)SCRIPTS="backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js";;
+            # 2)SCRIPTS="backend/scrappers/japanScrapper2.js";;
+            # 3)SCRIPTS="backend/scrappers/ukScrapper.js";;
+            # 4)SCRIPTS="backend/scrappers/spainScrapper.js";;
+            # 5)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            # 6)SCRIPTS="backend/scrappers/franceScrapper.js";;
+            # 7)SCRIPTS="backend/scrappers/taiwanScrapper.js";;
+            1)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            2)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            3)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            4)SCRIPTS="backend/scrappers/chinaScrapper.js";;
             5)SCRIPTS="backend/scrappers/chinaScrapper.js";;
-            6)SCRIPTS="backend/scrappers/franceScrapper.js";;
-            7)SCRIPTS="backend/scrappers/taiwanScrapper.js";;
+            6)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            7)SCRIPTS="backend/scrappers/chinaScrapper.js";;
           esac
 
           echo "SCRIPTS=$SCRIPTS" >> $GITHUB_OUTPUT

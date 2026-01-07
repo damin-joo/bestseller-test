@@ -37,8 +37,12 @@ async function fetchBooksMain() {
   const date = new Date();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: "new",   // REQUIRED in CI
     defaultViewport: null,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+    ],
   });
   const page = await browser.newPage();
 
