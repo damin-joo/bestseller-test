@@ -2,7 +2,7 @@ name: Web Scrapper Runner Test
 
 on:
   schedule:
-    # - cron: '0 23 * * *'
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 jobs:
@@ -11,52 +11,46 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: Install dependencies
-        run: npm install puppeteer googleapis google-auth-library puppeteer-extra puppeteer-extra-plugin-stealth
-
-      - name: Determine script to run
-        id: pick
-        run: |
-          DAY=$(TZ="Asia/Seoul" date +%u)
-          echo "DAY=$DAY" >> $GITHUB_OUTPUT
-
-          # if [ "$DAY" -eq 1 ]; then
-            echo "SCRAPER=backend/scrappers/kyoboScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 2 ]; then
-            echo "SCRAPER=backend/scrappers/usScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 3 ]; then
-            echo "SCRAPER=backend/scrappers/japanScrapper2.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 4 ]; then
-            echo "SCRAPER=backend/scrappers/ukScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 5 ]; then
-            echo "SCRAPER=backend/scrappers/chinaScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 6 ]; then
-            echo "SCRAPER=backend/scrappers/taiwanScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-          # if [ "$DAY" -eq 7 ]; then
-            echo "SCRAPER=backend/scrappers/franceScrapper.js" >> $GITHUB_OUTPUT
-          # fi
-
-      - name: Run the day-specific scraper
-        run: node ${{ steps.pick.outputs.SCRAPER }}
+        run: npm ci
 
       - name: Write Google service account key
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > sa.json
 
-      - name: Run script
+      - name: Determine script to run
+        id: pick
+        run: |
+          DAY=$(TZ="Asia/Seoul" date +%u)
+
+          case "$DAY" in
+            1) backend/scrappers/kyoboScrapper.js" SCRIPTS="backend/scrappers/spainScrapper.js ;;
+            2) SCRIPTS="backend/scrappers/usScrapper.js" ;;
+            3) SCRIPTS="backend/scrappers/japanScrapper2.js" ;;
+            4) SCRIPTS="backend/scrappers/ukScrapper.js" SCRIPTS="backend/scrappers/taiwanScrapper.js" ;;
+            5) SCRIPTS="backend/scrappers/chinaScrapper.js" ;;
+            6) SCRIPTS="backend/scrappers/taiwanScrapper.js" ;;
+            7) SCRIPTS="backend/scrappers/franceScrapper.js" ;;
+          esac
+
+          echo "SCRIPTS=$SCRIPTS" >> $GITHUB_OUTPUT
+
+      - name: Run the day-specific scraper(s)
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: sa.json
+        run: |
+          for script in ${{ steps.pick.outputs.SCRIPTS }}; do
+            node $script
+          done
+
+      - name: Upload results to Google
         env:
           GOOGLE_APPLICATION_CREDENTIALS: sa.json
         run: node backend/uploadToGoogle.js
