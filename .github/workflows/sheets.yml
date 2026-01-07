@@ -1,4 +1,4 @@
-name: Web Scrapper Runner Test
+name: Web Scrapper Runner
 
 on:
   schedule:
