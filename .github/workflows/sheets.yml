@@ -31,9 +31,9 @@ jobs:
             1)SCRIPTS="backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js";;
             2)SCRIPTS="backend/scrappers/japanScrapper2.js";;
             3)SCRIPTS="backend/scrappers/ukScrapper.js";;
-            4)SCRIPTS="backend/scrappers/franceScrapper.js backend/scrappers/taiwanScrapper.js backend/scrappers/spainScrapper.js backend/scrappers/ukScrapper.js backend/scrappers/japanScrapper2.js backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js ";;
+            4)SCRIPTS="backend/scrappers/franceScrapper.js backend/scrappers/spainScrapper.js";;
             5)SCRIPTS="backend/scrappers/chinaScrapper.js";;
-            6)SCRIPTS="backend/scrappers/franceScrapper.js backend/scrappers/taiwanScrapper.js backend/scrappers/spainScrapper.js backend/scrappers/ukScrapper.js backend/scrappers/japanScrapper2.js backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js ";;
+            6)SCRIPTS="backend/scrappers/franceScrapper.js";;
             7)SCRIPTS="backend/scrappers/taiwanScrapper.js";;
           esac
 
