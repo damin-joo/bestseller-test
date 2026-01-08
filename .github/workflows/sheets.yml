@@ -32,7 +32,7 @@ jobs:
             2)SCRIPTS="backend/scrappers/japanScrapper2.js";;
             3)SCRIPTS="backend/scrappers/ukScrapper.js";;
             4)SCRIPTS="backend/scrappers/franceScrapper.js backend/scrappers/spainScrapper.js";;
-            5)SCRIPTS="backend/scrappers/chinaScrapper.js";;
+            5)SCRIPTS="backend/scrappers/spainScrapper.js backend/scrappers/franceScrapper.js";;
             6)SCRIPTS="backend/scrappers/franceScrapper.js";;
             7)SCRIPTS="backend/scrappers/taiwanScrapper.js";;
           esac
