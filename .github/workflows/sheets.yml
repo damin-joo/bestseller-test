@@ -1,12 +1,10 @@
 name: Web Scrapper Runner
 
 on:
-  schedule:
-    - cron: "0 23 * * *"   # 23:00 UTC = 08:00 KST
   workflow_dispatch:
 
 jobs:
-  run-daily-script:
+  run-all-scrapers:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,27 +20,20 @@ jobs:
         working-directory: backend
         run: npm ci
 
-      - name: Determine scripts to run
-        id: pick
+      - name: Run ALL scrapers (manual trigger)
         run: |
-          DAY=$(TZ="Asia/Seoul" date +%u)
+          SCRIPTS="
+          backend/scrappers/usScrapper.js
+          backend/scrappers/kyoboScrapper.js
+          backend/scrappers/japanScrapper.js
+          backend/scrappers/ukScrapper.js
+          backend/scrappers/spainScrapper.js
+          backend/scrappers/chinaScrapper.js
+          backend/scrappers/franceScrapper.js
+          backend/scrappers/taiwanScrapper.js
+          "
 
-          case "$DAY" in
-            1)SCRIPTS="backend/scrappers/usScrapper.js backend/scrappers/kyoboScrapper.js";;
-            2)SCRIPTS="backend/scrappers/japanScrapper.js";;
-            3)SCRIPTS="backend/scrappers/ukScrapper.js";;
-            4)SCRIPTS="backend/scrappers/spainScrapper.js";;
-            5)SCRIPTS="backend/scrappers/chinaScrapper.js";;
-            6)SCRIPTS="backend/scrappers/franceScrapper.js";;
-            7)SCRIPTS="backend/scrappers/taiwanScrapper.js";;
-          esac
-
-          echo "SCRIPTS=$SCRIPTS" >> $GITHUB_OUTPUT
-          echo "Running scripts: $SCRIPTS"
-
-      - name: Run the day-specific scraper(s)
-        run: |
-          for script in ${{ steps.pick.outputs.SCRIPTS }}; do
+          for script in $SCRIPTS; do
             echo "▶ Running $script"
             node $script
           done
