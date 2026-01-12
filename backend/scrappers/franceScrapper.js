@@ -8,10 +8,17 @@ function sleep(ms) {
 
 async function fetchPageBooks(browser) {
   const page = await browser.newPage();
-  const url =
-    'https://www.amazon.fr/gp/bestsellers/books?utm_source=chatgpt.com';
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const url = 'https://www.amazon.fr/gp/bestsellers/books?utm_source=chatgpt.com';
+  
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36'
+  );
+  
+  await page.setViewport({ width: 1280, height: 800 });
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.waitForSelector('ol li.zg-no-numbers', { timeout: 15000 });
+  // await page.goto(url, { waitUntil: 'networkidle2' });
+  // await sleep(2000);
 
   const { books, links } = await page.evaluate(() => {
     const books = [];
