@@ -29,9 +29,10 @@ jobs:
           # backend/scrappers/spainScrapper.js
           # backend/scrappers/chinaScrapper.js
           # backend/scrappers/taiwanScrapper.js
+          # backend/scrappers/franceScrapper.js
           
           SCRIPTS="
-          backend/scrappers/franceScrapper.js
+          backend/scrappers/usScrapper.js
           "
 
           for script in $SCRIPTS; do
