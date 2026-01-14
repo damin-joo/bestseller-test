@@ -47,38 +47,7 @@ async function fetchBookDetail(browser, link) {
         const description = document.querySelector('#bookDescription_feature_div div.a-expander-content.a-expander-partial-collapse-content')?.innerText.trim() || '';
         const reviewSection = document.querySelector('#editorialReviews_feature_div div.a-section.a-spacing-small.a-padding-base')?.innerText.trim() || '';
         const writerInfo = document.querySelector('div._about-the-author-card_style_cardContentDiv__FXLPd div.a-fixed-left-grid-col.a-col-right div.a-cardui-body')?.innerText.trim() || '';
-        
-        let highResImage = '';
-      const mainImageEl = document.querySelector(
-        '#landingImage, #imgBlkFront, #ebooksImgBlkFront',
-      );
-      if (mainImageEl) {
-        const dataSrc = mainImageEl.getAttribute('data-a-dynamic-image');
-        if (dataSrc) {
-          try {
-            const imageUrls = JSON.parse(dataSrc);
-            let maxResolution = 0;
-            let bestImageUrl = '';
-
-            for (const [url, dimensions] of Object.entries(imageUrls)) {
-              const resolution = dimensions[0] * dimensions[1];
-              if (resolution > maxResolution) {
-                maxResolution = resolution;
-                bestImageUrl = url;
-              }
-            }
-
-            if (bestImageUrl) {
-              highResImage = bestImageUrl;
-            }
-          } catch (e) {}
-        }
-        if (!highResImage) {
-          highResImage = mainImageEl.src || '';
-        }
-      }
-
-      return { description, other: reviewSection, writerInfo, highResImage };
+        return { description, other: reviewSection, writerInfo };
     });
 
     await detailPage.close();
@@ -109,9 +78,6 @@ export default async function amazonScrapper() {
             batchBooks[idx].description = data.description;
             batchBooks[idx].other = data.other;
             batchBooks[idx].writerInfo = data.writerInfo;
-            if (data.highResImage) {
-              batchBooks[idx].image = data.highResImage;
-            }
             console.log(`${i + idx + 1}. ${batchBooks[idx].title} ✅`);
         });
     }
