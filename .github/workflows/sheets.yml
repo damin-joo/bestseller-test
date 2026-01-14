@@ -28,10 +28,10 @@ jobs:
           # backend/scrappers/ukScrapper.js
           # backend/scrappers/spainScrapper.js
           # backend/scrappers/chinaScrapper.js
+          # backend/scrappers/taiwanScrapper.js
           
           SCRIPTS="
           backend/scrappers/franceScrapper.js
-          backend/scrappers/taiwanScrapper.js
           "
 
           for script in $SCRIPTS; do
