@@ -29,6 +29,31 @@ function readBooksJSON(filename) {
   }
 }
 
+const UPDATE_ROW_BY_COUNTRY = {
+  USA: 2,
+  KOREA: 3,
+  JAPAN: 4,
+  UK: 5,
+  SPAIN: 6,
+  CHINA: 7,
+  FRANCE: 8,
+  TAIWAN: 9,
+};
+
+
+function getKSTDateYYMMDD() {
+  const now = new Date();
+
+  // Convert to KST (UTC + 9)
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+
+  const yy = String(kst.getFullYear()).slice(2);
+  const mm = String(kst.getMonth() + 1).padStart(2, '0');
+  const dd = String(kst.getDate()).padStart(2, '0');
+
+  return `${yy}${mm}${dd}`;
+}
+
 async function batchUpdateValues(spreadsheetId, valueInputOption, data) {
   const key = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
 
@@ -50,21 +75,43 @@ async function batchUpdateValues(spreadsheetId, valueInputOption, data) {
 (async () => {
   const spreadsheetId = '1GoeMU5HbM7g2jujoO5vBI6Z1BH_EjUtnVmV9zWAKpHs';
 
-  const uploadData = [
-    { range: 'Korea Data!B3', values: readBooksJSON('korea.json') },
-    { range: 'USA Data!B3', values: readBooksJSON('us.json') },
-    { range: 'Japan Data!B3', values: readBooksJSON('japan.json') },
-    { range: 'UK Data!B3', values: readBooksJSON('uk.json') },
-    { range: 'China Data!B3', values: readBooksJSON('china.json') },
-    { range: 'Taiwan Data!B3', values: readBooksJSON('taiwan.json') },
-    { range: 'France Data!B3', values: readBooksJSON('france.json') },
-    { range: 'Spain Data!B3', values: readBooksJSON('spain.json') },
-  ].filter(item => item.values.length > 0);
+  const uploads = [
+    { country: 'KOREA', range: 'Korea Data!B3', file: 'korea.json' },
+    { country: 'USA', range: 'USA Data!B3', file: 'us.json' },
+    { country: 'JAPAN', range: 'Japan Data!B3', file: 'japan.json' },
+    { country: 'UK', range: 'UK Data!B3', file: 'uk.json' },
+    { country: 'CHINA', range: 'China Data!B3', file: 'china.json' },
+    { country: 'TAIWAN', range: 'Taiwan Data!B3', file: 'taiwan.json' },
+    { country: 'FRANCE', range: 'France Data!B3', file: 'france.json' },
+    { country: 'SPAIN', range: 'Spain Data!B3', file: 'spain.json' },
+  ];
 
-  if (uploadData.length === 0) {
-    console.log('⚠️ No data to upload.');
-    return;
+  const uploadData = [];
+  const updateDateData = [];
+
+  const kstDate = getKSTDateYYMMDD();
+
+  for (const u of uploads) {
+    const values = readBooksJSON(u.file);
+
+    if (values.length > 0) {
+      uploadData.push({
+        range: u.range,
+        values,
+      });
+
+      // add update date ONLY for uploaded country
+      updateDateData.push({
+        range: `Updates!B${UPDATE_ROW_BY_COUNTRY[u.country]}`,
+        values: [[kstDate]],
+      });
+    }
   }
 
-  await batchUpdateValues(spreadsheetId, 'RAW', uploadData);
+  if (uploadData.length === 0) {
+  console.log('⚠️ No data to upload.');
+  return;
+}
+
+  await batchUpdateValues(spreadsheetId, 'RAW', [...uploadData, ...updateDateData]);
 })();
