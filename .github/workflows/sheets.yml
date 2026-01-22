@@ -32,6 +32,7 @@ jobs:
           # backend/scrappers/franceScrapper.js
           
           SCRIPTS="
+          backend/scrappers/kyoboScrapper.js
           backend/scripts/generateAuthor_korea.js
           "
 
